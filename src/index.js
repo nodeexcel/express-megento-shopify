@@ -17,10 +17,16 @@ app.server = http.createServer(app)
 app.use(morgan('dev'))
 
 app.use(db());
-
+app.use(cors())
+app.use("*", (req, res, next)=>{
+  if(req.method == 'OPTIONS'){
+    res.json({status:1})
+  }else{
+    next()
+  }
+})
 app.use("/V1/*", middleware.api);
 // 3rd party middleware
-app.use(cors({ exposedHeaders: config.corsHeaders }))
 app.use(bodyParser.json({ limit: config.bodyLimit }))
 app.use(bodyParser.urlencoded({ extended: true }))
 const initRoutes = (app) => {
