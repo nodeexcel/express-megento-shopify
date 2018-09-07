@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
-import request from'request'
+import request from 'request'
+import config from '../config'
 
 export class AuthController {
     // middleware for logged in users
@@ -8,7 +9,7 @@ export class AuthController {
     }
 
     api(req, res, next){
-    	req.URL = 'http://192.168.1.129/Magento-CE-2.1.9_sample_data-2017-09-13-03-48-19/index.php/rest';
+    	req.URL = `${config.url}/Magento-CE-2.1.9_sample_data-2017-09-13-03-48-19/index.php/rest`;
     	let url = req.originalUrl;
     	let method = req.method
     	let body = req.body
