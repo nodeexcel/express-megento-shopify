@@ -1,16 +1,19 @@
 import errorHandler from '../lib/util'
 
 export default class BaseAPIController {
-  constructor () {
-  }
+  constructor() {}
 
-  handleErrorResponse (res, err) {
-    res.json({ status:0, error:errorHandler(err) })
-  }
-
-  handleSuccessResponse (res) {
+  handleErrorResponse(res, err) {
     res.json({
-      status: 'SUCCESS'
+      status: 0,
+      error: errorHandler(err)
+    })
+  }
+
+  handleSuccessResponse(res, next, data) {
+    res.json({
+      status: 1,
+      data: data
     })
   }
 }
