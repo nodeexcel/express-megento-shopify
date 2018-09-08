@@ -8,5 +8,5 @@ module.exports = {
         password: 'java@123',
         username: 'root'
     },
-    url: "http://plivo1.demo.xmag/estore.com/magento2/magento223/index.php"
+    url: "http://plivo1.demo.xmag/estore.com/magento2/magento223/index.php/rest"
 }
