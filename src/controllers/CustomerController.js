@@ -8,6 +8,15 @@ export class CustomerController extends BaseAPIController {
         try {
             let manage_data = await CustomerProvider.login(req);
             let login = await request.API(req);
+            if(req.api_end_point_server == 'magento'){
+                req.endUrl = req.url_path+ "/V1/customers/me";
+                req.headers.authorization = "Bearer "+login;
+                req.method = "get";
+                let loginDetails = await request.API(req);
+                // loginDetails.token = login;
+                login={token:login};
+                login = Object.assign(loginDetails, login);
+            }
             this.handleSuccessResponse(res, next, login)
         } catch (err) {
             this.handleErrorResponse(res, err)
