@@ -13,21 +13,15 @@ module.exports = function() {
         timestamps: false
     });
 
-    let categories = mongoose.Schema({}, {
-        collection: "categories",
+    let apiEndPoint = mongoose.Schema({}, {
+        collection: "apiEndPoints",
         strict: false,
         timestamps: false
     });
 
-    let articles = mongoose.Schema({}, {
-        collection: 'articles',
-        strict: false
-    })
-
     return function(req, res, next) {
-        req.category = conn.model("categories", categories);
-        req.articles = conn.model('articles', articles);
         req.appData = conn.model('appData', appData);
+        req.apiEndPoint = conn.model('apiEndPoints', apiEndPoint);
         next();
     };
 };

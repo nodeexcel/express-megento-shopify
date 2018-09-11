@@ -26,11 +26,11 @@ app.use("*", (req, res, next)=>{
   }
 })
 
-app.use("/V1/*", middleware.appData);
-app.use("/V1/*", middleware.api);
 // 3rd party middleware
 app.use(bodyParser.json({ limit: config.bodyLimit }))
 app.use(bodyParser.urlencoded({ extended: true }))
+
+
 const initRoutes = (app) => {
     // including all routes
   glob('./routes/*.js', { cwd: path.resolve('./src') }, (err, routes) => {
@@ -46,6 +46,8 @@ const initRoutes = (app) => {
 }
 
 initRoutes(app)
+app.use("/V1/*", middleware.appData);
+app.use("/V1/*", middleware.api);
 app.server.listen(process.env.PORT || config.port)
 // console.log(`Started on port ${app.server.address().port}`);
 export default app

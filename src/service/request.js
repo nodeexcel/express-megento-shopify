@@ -4,7 +4,7 @@ let API = async (req) => {
 
     return new Promise(function (resolve, reject) {
         request({
-            url: "http://plivo1.demo.xmagestore.com/magento2/magento223/index.php" + req.endPoint,
+            url: req.endUrl,
             method: req.method,
             headers: {
                 APP_ID: req.headers.app_id || 'com.xmage',

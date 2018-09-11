@@ -1,4 +1,5 @@
-import customer from '../controllers/CustomerController'
+import customer from '../controllers/CustomerController';
+import middleware from '../middleware/auth.js'
 
 export default (app) => {
 
@@ -6,7 +7,7 @@ export default (app) => {
     app.route('/customer/login').post(customer.login);
 
     // Route for customer registration
-    app.route('/customer/register').post(customer.register);
+    app.route('/customer/register').post( middleware.appData,middleware.apiRoute,customer.register);
 
     // Route for customer forgot password
     app.route('/customer/forgot').put(customer.forgotPassword);

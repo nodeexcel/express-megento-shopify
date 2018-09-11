@@ -17,7 +17,6 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer register  */
     register = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.register(req);
             let register = await request.API(req);
             this.handleSuccessResponse(res, next, register)
         } catch (err) {

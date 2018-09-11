@@ -7,8 +7,9 @@ export class AuthController {
     appData(req, res, next) {
         req.appData.findOne({app_id: req.headers.app_id}).then((response)=>{
             if(response && response._id){
-                console.log(response.get('url'))
+                console.log(response.get('server'))
                 req.url_path = response.get('url');
+                req.api_end_point_server = response.get('server')
                 next()
             }else{
                 res.status(400).json({message: "Invalid App Id"});
@@ -17,12 +18,11 @@ export class AuthController {
     }
 
     api(req, res, next){
-    	req.URL = `${req.url_path}/magento2/index.php/rest`;
+    	req.URL = `${req.url_path}`;
         console.log(req.URL)
     	let url = req.originalUrl;
     	let method = req.method
     	let body = req.body
-
     	request({
         protocol: 'http:',
         url: req.URL + url, //URL to hit
@@ -45,6 +45,23 @@ export class AuthController {
             }
         }
     });
+    }
+
+    apiRoute(req, res, next){
+        req.apiEndPoint.findOne({nodeEndPoint: req.originalUrl}).then((response)=>{
+            if(response && response._id){
+                // console.log(api_end_point_server)
+                if(req.api_end_point_server == 'magento'){
+                    req.endUrl = req.url_path + response.get('magentoEndPoint');
+                    next()
+                }else{
+                    req.endUrl = req.url_path + response.get('shopifyEndPoint');
+                    next()
+                }
+            }else{
+                res.status(400).json({message: "No Route Found"})
+            }
+        })
     }
 }
 
