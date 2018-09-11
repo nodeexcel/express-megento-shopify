@@ -22,7 +22,7 @@ export class AuthController {
         console.log(req.URL)
     	let url = req.originalUrl;
     	let method = req.method
-    	let body = req.body
+        let body = req.body
     	request({
         protocol: 'http:',
         url: req.URL + url, //URL to hit

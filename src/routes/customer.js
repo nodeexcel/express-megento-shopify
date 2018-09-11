@@ -4,7 +4,7 @@ import middleware from '../middleware/auth.js'
 export default (app) => {
 
     // Route for customer login
-    app.route('/customer/login').post(customer.login);
+    app.route('/customer/login').post(middleware.appData, middleware.apiRoute, customer.login);
 
     // Route for customer registration
     app.route('/customer/register').post( middleware.appData,middleware.apiRoute,customer.register);

@@ -1,8 +1,9 @@
-import category from '../controllers/category'
+import category from '../controllers/CategoryController'
+import middleware from '../middleware/auth.js'
 
 export default (app) => {
-    /* Route for User Registration  */
-    app.route('/add/category').post(category.create)
+    /* Route for get all categories  */
+    app.route('/category/getAllCategoryies').get(middleware.appData, middleware.apiRoute, category.getAllCategoryies)
 
     return app
 }
