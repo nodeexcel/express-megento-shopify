@@ -13,7 +13,7 @@ export default class BaseAPIController {
   handleSuccessResponse(res, next, data) {
     res.json({
       status: 1,
-      data: data
+      body: data
     })
   }
 }

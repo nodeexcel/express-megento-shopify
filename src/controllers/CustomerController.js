@@ -17,7 +17,7 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer register  */
     register = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.register(req.checkBody, req.validationErrors);
+            let manage_data = await CustomerProvider.register(req);
             let register = await request.API(req);
             this.handleSuccessResponse(res, next, register)
         } catch (err) {
@@ -46,7 +46,16 @@ export class CustomerController extends BaseAPIController {
             this.handleErrorResponse(res, err)
         }
     }
-
+    /* Controller for customer delete_account  */
+    delete_account = async (req, res, next) => {
+        try {
+            let manage_data = await CustomerProvider.delete_account(req);
+            let delete_account = await request.API(req);
+            this.handleSuccessResponse(res, next, delete_account)
+        } catch (err) {
+            this.handleErrorResponse(res, err)
+        }
+    }
 }
 
 const controller = new CustomerController()

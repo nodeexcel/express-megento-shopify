@@ -15,8 +15,9 @@ export class WebController extends BaseAPIController {
     }
 
     /* Controller for allowed countries  */
-    getAllowedCountries = async (req, res) => {
+    getAllowedCountries = async (req, res, next) => {
         try {
+            let manage_data = await WebProvider.getAllowedCountries(req);
             let allowedCountries = await request.API(req);
             this.handleSuccessResponse(res, next, allowedCountries)
         } catch (err) {

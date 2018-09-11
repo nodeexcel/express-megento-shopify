@@ -1,29 +1,25 @@
-let register = async (checkBody, validation) => {
-    checkBody("username", "Username cannot be empty").notEmpty();
-    checkBody("firstname", "Firstname cannot be empty").notEmpty();
-    checkBody("lastname", "Fastname cannot be empty").notEmpty();
-    checkBody("email", "Email cannot be empty").notEmpty();
-    checkBody("pass", "Password cannot be empty").notEmpty();
-    checkBody('conpass', 'Passwords do not match.').equals(checkBody.pass);
-    var errors = validation();
-    if (errors) {
-        throw new Error(errors[0].msg);
-    } else {
-        return 1;
-    }
-
+let register = async (req) => {
+    req.endPoint = '/rest/V1/customers';
 };
 
 let login = async (req) => {
-
+    req.endPoint = '/rest/V1/integration/customer/token';
 };
 
 let forgotPassword = async (req) => {
-
+    req.endPoint = '/excellence/mobile/api/v1';
 };
 
 let social_account = async (req) => {
+    req.endPoint = '/rest/V1/directory/countries';
+};
 
+let delete_account = async (req) => {
+    req.endPoint = '/rest/V1/directory/countries';
+};
+
+let logout = async (req) => {
+    req.endPoint = '/rest/V1/directory/countries';
 };
 
 export default {
