@@ -4,12 +4,21 @@ import config from '../config'
 
 export class AuthController {
     // middleware for logged in users
-    requiresLogin(req, res, next) {
-
+    appData(req, res, next) {
+        req.appData.findOne({app_id: req.headers.app_id}).then((response)=>{
+            if(response && response._id){
+                console.log(response.get('url'))
+                req.url_path = response.get('url');
+                next()
+            }else{
+                res.status(400).json({message: "Invalid App Id"});
+            }
+        })
     }
 
     api(req, res, next){
-    	req.URL = `${config.url}/Magento-CE-2.1.9_sample_data-2017-09-13-03-48-19/index.php/rest`;
+    	req.URL = `${req.url_path}/magento2/index.php/rest`;
+        console.log(req.URL)
     	let url = req.originalUrl;
     	let method = req.method
     	let body = req.body

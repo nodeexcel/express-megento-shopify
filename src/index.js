@@ -25,6 +25,8 @@ app.use("*", (req, res, next)=>{
     next()
   }
 })
+
+app.use("/V1/*", middleware.appData);
 app.use("/V1/*", middleware.api);
 // 3rd party middleware
 app.use(bodyParser.json({ limit: config.bodyLimit }))
