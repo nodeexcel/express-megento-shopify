@@ -17,8 +17,30 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer register  */
     register = async (req, res, next) => {
         try {
+            let manage_data = await CustomerProvider.register(req);
             let register = await request.API(req);
-            this.handleSuccessResponse(res, next, register)
+            let final_data = {}
+            if(req.api_end_point_server == 'shopify' && register.customer){
+                final_data = {
+                    id: register.customer.id,
+                    firstname: register.customer.first_name,
+                    lastname: register.customer.last_name,
+                    email: register.customer.email,
+                    addresses: register.customer.addresses
+                }
+            }else if(register.id){
+                final_data = {
+                    id:register.id,
+                    firstname: register.firstname,
+                    lastname: register.lastname,
+                    email: register.email,
+                    addresses: register.addresses
+                }
+            }else{
+                final_data = register
+            }
+            // console.log(register)
+            this.handleSuccessResponse(res, next, final_data)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }
