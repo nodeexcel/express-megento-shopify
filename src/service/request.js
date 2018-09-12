@@ -3,9 +3,6 @@ import config from '../config'
 let API = async (req) => {
 
     return new Promise(function (resolve, reject) {
-        console.log("******************************************************************************")
-        console.log(req.endUrl)
-        console.log("******************************************************************************")
         request({
             url: req.endUrl,
             method: req.method,
