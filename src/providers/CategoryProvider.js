@@ -7,8 +7,8 @@ let getAllCategoryies = (async function (req) {
 });
 let categoryProduct = (async function (req) {
     if(req.api_end_point_server == 'magento'){
-        console.log(req.query.searchCriteria.filter_groups[0].filters[0].field);
-        req.endUrl = req.url_path + "/V1/products?searchCriteria[filter_groups][0][filters][0][field]="+req.query.searchCriteria.filter_groups[0].filters[0].field+"&searchCriteria[filter_groups][0][filters][0][value]="+req.query.searchCriteria.filter_groups[0].filters[0].value+"&searchCriteria[sortOrders][0][field]="+req.query.searchCriteria.sortOrders[0].field+"&searchCriteria[sortOrders][0][direction]="+req.query.searchCriteria.sortOrders[0].direction+"&searchCriteria[pageSize]="+req.query.searchCriteria.pageSize+"&searchCriteria[currentPage]="+req.query.searchCriteria.currentPage;
+        req.endUrl = req.url_path + "/V1/products?searchCriteria[filter_groups][0][filters][0][field]=category_id&searchCriteria[filter_groups][0][filters][0][value]="+req.body.category_id+"&searchCriteria[sortOrders][0][field]="+req.body.sortBy+"&searchCriteria[sortOrders][0][direction]="+req.body.sortOrder+"&searchCriteria[pageSize]="+req.body.pageSize+"&searchCriteria[currentPage]="+req.body.currentPage;
+        req.method = "get";
     } else {
         req.endUrl = req.url_path + "";
     }
