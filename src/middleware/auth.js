@@ -48,6 +48,7 @@ export class AuthController {
     }
 
     apiRoute(req, res, next){
+        console.log(req.originalUrl)
         req.apiEndPoint.findOne({nodeEndPoint: req.originalUrl}).then((response)=>{
             if(response && response._id){
                 // console.log(api_end_point_server)
