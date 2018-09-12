@@ -1,7 +1,7 @@
 import BaseAPIController from './BaseAPIController'
 import CategoryProvider from '../providers/CategoryProvider'
 import request from '../service/request'
-
+import _ from 'lodash';
 export class CategoryController extends BaseAPIController {
 
     /* Controller for get all categories*/
@@ -20,6 +20,16 @@ export class CategoryController extends BaseAPIController {
         try {
             let manage_data = await CategoryProvider.categoryProduct(req);
             let categoryProduct = await request.API(req);
+            if(req.api_end_point_server == 'magento'){
+                _.forEach(categoryProduct['items'], (value, key) => {
+                    var imageLink = _.find(value.custom_attributes, (details) => {
+                        if(details.attribute_code == "image"){
+                            return details.value;
+                        }
+                    })
+                    categoryProduct.items[key].imageLink = imageLink.value;
+                })
+            }
             this.handleSuccessResponse(res, next, categoryProduct)
         } catch (err) {
             this.handleErrorResponse(res, err)

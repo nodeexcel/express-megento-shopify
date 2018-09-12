@@ -3,17 +3,21 @@ import config from '../config'
 let API = async (req) => {
 
     return new Promise(function (resolve, reject) {
-        request({
+        console.log(req.endUrl)
+        var option = {
             url: req.endUrl,
             method: req.method,
             headers: {
-                APP_ID: req.headers.app_id || 'com.xmage',
+                "APP_ID": req.headers.app_id || 'com.xmage',
                 "Authorization": req.headers.authorization,
                 'Content-Type': 'application/json',
             },
             // timeout: 10000,
-            body: JSON.stringify(req.body)
-        }, function (error, result, body) {
+        };
+        if(req.method == 'post'){
+            option.body = JSON.stringify(req.body);
+        }
+        request(option, function (error, result, body) {
             if (error) {
                 reject(error);
             } else if (result.statusCode === 500) {
@@ -21,6 +25,7 @@ let API = async (req) => {
                 allData.statusCode = 500;
                 reject(allData);
             } else {
+                // console.log(body)
                 allData = JSON.parse(body);
                 if (allData.data) {
                     resolve(allData.data);
