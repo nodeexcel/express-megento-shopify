@@ -29,7 +29,7 @@ export class CustomerController extends BaseAPIController {
             let manage_data = await CustomerProvider.register(req);
             let register = await request.API(req);
             let final_data = {}
-            if(req.api_end_point_server == 'shopify' && register.customer){
+            if(req.api_end_point_server == 'shopify'){
                 final_data = {
                     id: register.customer.id,
                     firstname: register.customer.first_name,
@@ -37,7 +37,7 @@ export class CustomerController extends BaseAPIController {
                     email: register.customer.email,
                     addresses: register.customer.addresses
                 }
-            }else if(register.id){
+            }else {
                 final_data = {
                     id:register.id,
                     firstname: register.firstname,
@@ -45,10 +45,7 @@ export class CustomerController extends BaseAPIController {
                     email: register.email,
                     addresses: register.addresses
                 }
-            }else{
-                final_data = register
             }
-            // console.log(register)
             this.handleSuccessResponse(res, next, final_data)
         } catch (err) {
             this.handleErrorResponse(res, err)

@@ -28,7 +28,13 @@ let API = async (req) => {
                 if (allData.data) {
                     resolve(allData.data);
                 } else {
-                    resolve(allData);
+                    if(allData.errors){
+                        reject(allData.errors);
+                    } else if(allData.message) {
+                        reject(allData.message);
+                    } else {
+                        resolve(allData);
+                    }
                 }
             }
         });
