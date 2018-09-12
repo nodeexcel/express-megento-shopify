@@ -5,11 +5,11 @@ import request from '../service/request'
 export class CategoryController extends BaseAPIController {
 
     /* Controller for get all categories*/
-    getAllCategoryies = async (req, res, next) => {
+    getAllCategories = async (req, res, next) => {
         try {
-            // let manage_data = await CustomerProvider.getAllCategoryies(req);
-            let getAllCategoryies = await request.API(req);
-            this.handleSuccessResponse(res, next, getAllCategoryies)
+            let manage_data = await CategoryProvider.getAllCategoryies(req);
+            let getAllCategories = await request.API(req);
+            this.handleSuccessResponse(res, next, getAllCategories)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }
@@ -18,11 +18,9 @@ export class CategoryController extends BaseAPIController {
     /* Controller for get product for a category*/
     categoryProduct = async (req, res, next) => {
         try {
-            // let manage_data = await CustomerProvider.getAllCategoryies(req);
-            req.endUrl = req.endUrl+"/"+req.body.categoryId+"/products"
-            req.method = "get";
-            let getAllCategoryies = await request.API(req);
-            this.handleSuccessResponse(res, next, getAllCategoryies)
+            let manage_data = await CategoryProvider.categoryProduct(req);
+            let categoryProduct = await request.API(req);
+            this.handleSuccessResponse(res, next, categoryProduct)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }

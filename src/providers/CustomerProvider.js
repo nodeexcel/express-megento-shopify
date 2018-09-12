@@ -7,12 +7,20 @@ let register = async (req) => {
         data['customer']['email'] = body.customer.email;
         data['passsword'] = body.passsword;
         req.body = data;
+        req.endUrl = req.url_path + "/customers.json";
         return
+    } else {
+        req.endUrl = req.url_path + "/V1/customers";
     }
 };
 
 let login = async (req) => {
-    req.endPoint = '/rest/V1/integration/customer/token';
+    if(req.api_end_point_server == 'shopify'){
+        req.endUrl = req.url_path + "";
+        return
+    } else {
+        req.endUrl = req.url_path + "/V1/integration/customer/token";
+    }
 };
 
 let forgotPassword = async (req) => {

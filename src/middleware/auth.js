@@ -46,24 +46,6 @@ export class AuthController {
         }
     });
     }
-
-    apiRoute(req, res, next){
-        console.log(req.originalUrl)
-        req.apiEndPoint.findOne({nodeEndPoint: req.originalUrl}).then((response)=>{
-            if(response && response._id){
-                // console.log(api_end_point_server)
-                if(req.api_end_point_server == 'magento'){
-                    req.endUrl = req.url_path + response.get('magentoEndPoint');
-                    next()
-                }else{
-                    req.endUrl = req.url_path + response.get('shopifyEndPoint');
-                    next()
-                }
-            }else{
-                res.status(400).json({message: "No Route Found"})
-            }
-        })
-    }
 }
 
 const controller = new AuthController()

@@ -11,7 +11,7 @@ export class CustomerController extends BaseAPIController {
             if(req.api_end_point_server == 'magento'){
                 req.endUrl = req.url_path+ "/V1/customers/me";
                 req.headers.authorization = "Bearer "+login;
-                req.method = "get";
+                req.method = "get"; 
                 let loginDetails = await request.API(req);
                 // loginDetails.token = login;
                 login={token:login};
@@ -72,16 +72,6 @@ export class CustomerController extends BaseAPIController {
             let manage_data = await CustomerProvider.social_account(req);
             let social_account = await request.API(req);
             this.handleSuccessResponse(res, next, social_account)
-        } catch (err) {
-            this.handleErrorResponse(res, err)
-        }
-    }
-    /* Controller for customer delete_account  */
-    delete_account = async (req, res, next) => {
-        try {
-            let manage_data = await CustomerProvider.delete_account(req);
-            let delete_account = await request.API(req);
-            this.handleSuccessResponse(res, next, delete_account)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }

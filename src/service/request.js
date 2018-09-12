@@ -3,6 +3,9 @@ import config from '../config'
 let API = async (req) => {
 
     return new Promise(function (resolve, reject) {
+        console.log("******************************************************************************")
+        console.log(req.endUrl)
+        console.log("******************************************************************************")
         request({
             url: req.endUrl,
             method: req.method,
@@ -11,7 +14,7 @@ let API = async (req) => {
                 "Authorization": req.headers.authorization,
                 'Content-Type': 'application/json',
             },
-            timeout: 10000,
+            // timeout: 10000,
             body: JSON.stringify(req.body)
         }, function (error, result, body) {
             if (error) {
@@ -35,14 +38,3 @@ let API = async (req) => {
 export default {
     API
 }
-
-
-/*
-
-            console.log("************************************************************************");
-            console.log("http://plivo1.demo.xmagestore.com/magento2/magento223/index.php"+req.endPoint);
-            console.log("************************************************************************");
-            // protocol: 'http:',
-            // url: `${config.url}/Magento-CE-2.1.9_sample_data-2017-09-13-03-48-19/index.php/rest`+req.originalUrl,
-            // url:"https://www.google.com",
-*/

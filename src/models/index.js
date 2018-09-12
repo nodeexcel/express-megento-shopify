@@ -13,15 +13,8 @@ module.exports = function() {
         timestamps: false
     });
 
-    let apiEndPoint = mongoose.Schema({}, {
-        collection: "apiEndPoints",
-        strict: false,
-        timestamps: false
-    });
-
     return function(req, res, next) {
         req.appData = conn.model('appData', appData);
-        req.apiEndPoint = conn.model('apiEndPoints', apiEndPoint);
         next();
     };
 };
