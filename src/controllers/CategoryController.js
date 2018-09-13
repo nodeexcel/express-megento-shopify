@@ -1,14 +1,13 @@
 import BaseAPIController from './BaseAPIController'
 import CategoryProvider from '../providers/CategoryProvider'
 import request from '../service/request'
-import _ from 'lodash';
 export class CategoryController extends BaseAPIController {
 
     /* Controller for get all categories*/
     getAllCategories = async (req, res, next) => {
         try {
-            let manage_data = await CategoryProvider.getAllCategoryies(req);
-            let getAllCategories = await request.API(req);
+            let manage_data = await CategoryProvider.setPathForGetCategories(req);
+            let getAllCategories = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, getAllCategories)
         } catch (err) {
             this.handleErrorResponse(res, err)
@@ -18,11 +17,11 @@ export class CategoryController extends BaseAPIController {
     /* Controller for get product for a category*/
     categoryProduct = async (req, res, next) => {
         try {
-            let manage_data = await CategoryProvider.categoryProduct(req);
-            let categoryProduct = await request.API(req);
-            if(req.api_end_point_server == 'magento'){
-                _.forEach(categoryProduct['items'], (value, key) => {
-                    var imageLink = _.find(value.custom_attributes, (details) => {
+            let manage_data = await CategoryProvider.setPathForGetCategoryProduct(req);
+            let categoryProduct = await request.requestToServer(manage_data);
+            if(req.isMagento){
+                categoryProduct['items'].forEach((value, key) => {
+                    var imageLink = value.custom_attributes.find((details) => {
                         if(details.attribute_code == "image"){
                             return details.value;
                         }

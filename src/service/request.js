@@ -1,21 +1,20 @@
 import request from 'request'
 import config from '../config'
-let API = async (req) => {
+let requestToServer = async (reqData) => {
 
     return new Promise(function (resolve, reject) {
-        console.log(req.endUrl)
         var option = {
-            url: req.endUrl,
-            method: req.method,
+            url: reqData.endUrl,
+            method: reqData.method,
             headers: {
-                "APP_ID": req.headers.app_id || 'com.xmage',
-                "Authorization": req.headers.authorization,
-                'Content-Type': 'application/json',
+                "APP_ID": reqData.app_id || config.magentoAppId,
+                "Authorization": reqData.authorization,
+                'Content-Type': config.contentType,
             },
             // timeout: 10000,
         };
-        if(req.method == 'post'){
-            option.body = JSON.stringify(req.body);
+        if(reqData.method == 'POST'){
+            option.body = JSON.stringify(reqData.body);
         }
         request(option, function (error, result, body) {
             if (error) {
@@ -44,5 +43,5 @@ let API = async (req) => {
 }
 
 export default {
-    API
+    requestToServer
 }

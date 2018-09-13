@@ -1,9 +1,11 @@
-let config = (async function (req) {
+let config = (async function (endPoint) {
     // req.body = {secret: 'optional'};
-    req.endPoint = '/excellence/mobile/api/v1/web/config';
+    endPoint = '/excellence/mobile/api/v1/web/config';
+    return
 });
-let getAllowedCountries = (async function (req) {
-    req.endPoint = '/rest/V1/directory/countries';
+let getAllowedCountries = (async function (endPoint) {
+    endPoint = '/rest/V1/directory/countries';
+    return
 });
 
 export default {

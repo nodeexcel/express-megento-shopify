@@ -10,8 +10,6 @@ export default class BaseAPIController {
   }
 
   handleSuccessResponse(res, next, data) {
-    res.json({
-      body: data
-    })
+    res.json(data)
   }
 }

@@ -1,21 +1,24 @@
 import BaseAPIController from './BaseAPIController'
 import CustomerProvider from '../providers/CustomerProvider';
 import request from '../service/request'
+import config from '../config';
 
 export class CustomerController extends BaseAPIController {
     /* Controller for customer login  */
     login = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.login(req);
-            let login = await request.API(req);
-            if(req.api_end_point_server == 'magento'){
-                req.endUrl = req.url_path+ "/V1/customers/me";
-                req.headers.authorization = "Bearer "+login;
-                req.method = "get"; 
-                let loginDetails = await request.API(req);
+            let manage_data = await CustomerProvider.setDetailsForLogin(req.body, req.headers, req.method, req.isShopify);
+            let login = await request.requestToServer(manage_data);
+            if(req.isMagento){
+                manage_data.endUrl = config.magentoUrl + "/V1/customers/me";
+                manage_data.authorization = "Bearer "+login;
+                manage_data.method = config.getMethod; 
+                let loginDetails = await request.requestToServer(manage_data);
                 // loginDetails.token = login;
                 login={token:login};
                 login = Object.assign(loginDetails, login);
+            } else {
+                login = login.customers[0];
             }
             this.handleSuccessResponse(res, next, login)
         } catch (err) {
@@ -26,10 +29,10 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer register  */
     register = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.register(req);
-            let register = await request.API(req);
+            let manage_data = await CustomerProvider.setDetailsForRegister(req.body, req.headers, req.method, req.isShopify);
+            let register = await request.requestToServer(manage_data);
             let final_data = {}
-            if(req.api_end_point_server == 'shopify'){
+            if(req.isShopify){
                 final_data = {
                     id: register.customer.id,
                     firstname: register.customer.first_name,
@@ -55,20 +58,9 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer forgotPassword  */
     forgotPassword = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.forgotPassword(req);
-            let forgotPassword = await request.API(req);
+            let manage_data = await CustomerProvider.setDetailsForForgotPassword(req);
+            let forgotPassword = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, forgotPassword)
-        } catch (err) {
-            this.handleErrorResponse(res, err)
-        }
-    }
-
-    /* Controller for customer social_account  */
-    social_account = async (req, res, next) => {
-        try {
-            let manage_data = await CustomerProvider.social_account(req);
-            let social_account = await request.API(req);
-            this.handleSuccessResponse(res, next, social_account)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }

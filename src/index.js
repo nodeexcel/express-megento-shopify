@@ -7,7 +7,6 @@ import glob from 'glob'
 import chalk from 'chalk'
 import bodyParser from 'body-parser'
 import config from './config'
-import db from './models'
 import middleware from './middleware/auth.js'
 
 const app = express()
@@ -16,7 +15,6 @@ app.server = http.createServer(app)
 // logger
 app.use(morgan('dev'))
 
-app.use(db());
 app.use(cors())
 app.use("*", (req, res, next)=>{
   if(req.method == 'OPTIONS'){
@@ -46,8 +44,6 @@ const initRoutes = (app) => {
 }
 
 initRoutes(app)
-app.use("/V1/*", middleware.appData);
-app.use("/V1/*", middleware.api);
 app.server.listen(process.env.PORT || config.port)
 // console.log(`Started on port ${app.server.address().port}`);
 export default app
