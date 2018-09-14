@@ -1,5 +1,5 @@
 module.exports = {
-    port: 8000,
+    port: 7000,
     bodyLimit: '100kb',
     corsHeaders: ['Link'],
     db: {

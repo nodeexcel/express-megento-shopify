@@ -13,7 +13,7 @@ let setPathForGetCategories = (async function (headers, method, isMagento) {
         return manage_data;
     }
 });
-let setPathForGetCategoryProduct = (async function (body, headers, method, isMagento) {
+let setPathForGetCategoryProduct = (async function (body, headers, isMagento) {
     let manage_data = {};
     if(isMagento){
         manage_data.endUrl = config.magentoUrl + "/V1/products?searchCriteria[filter_groups][0][filters][0][field]=category_id&searchCriteria[filter_groups][0][filters][0][value]="+body.category_id+"&searchCriteria[sortOrders][0][field]="+body.sortBy+"&searchCriteria[sortOrders][0][direction]="+body.sortOrder+"&searchCriteria[pageSize]="+body.pageSize+"&searchCriteria[currentPage]="+body.currentPage;
@@ -22,8 +22,8 @@ let setPathForGetCategoryProduct = (async function (body, headers, method, isMag
         manage_data.authorization = headers.authorization;
         return manage_data;
     } else {
-        req.endUrl = req.url_path + "/products.json?limit="+req.body.pageSize+"&page="+req.body.currentPage+"&collection_id="+req.body.category_id;
-        req.method = config.getMethod;
+        manage_data.endUrl = req.url_path + "/products.json?limit="+req.body.pageSize+"&page="+req.body.currentPage+"&collection_id="+req.body.category_id;
+        manage_data.method = config.getMethod;
         return manage_data;
     }
 });

@@ -37,7 +37,7 @@ let setDetailsForLogin = async (body, headers, method, isShopify) => {
     }
 };
 
-let setDetailsForForgotPassword = async (req) => {
+let setDetailsForForgotPassword = async () => {
     
 };
 

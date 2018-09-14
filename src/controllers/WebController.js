@@ -6,7 +6,7 @@ export class WebController extends BaseAPIController {
     /* Controller for Web config  */
     config = async (req, res, next) => {
         try {
-            let manage_data = await WebProvider.config(req.endPoint);
+            let manage_data = await WebProvider.setPathForConfigPage(req.method, req.isMagento);
             let web_config = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, web_config)
         } catch (err) {
@@ -17,7 +17,7 @@ export class WebController extends BaseAPIController {
     /* Controller for allowed countries  */
     getAllowedCountries = async (req, res, next) => {
         try {
-            let manage_data = await WebProvider.getAllowedCountries(req.endPoint);
+            let manage_data = await WebProvider.setPathForGetAllowedCountries(req.method, req.isMagento);
             let allowedCountries = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, allowedCountries)
         } catch (err) {

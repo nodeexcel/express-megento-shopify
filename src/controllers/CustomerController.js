@@ -58,7 +58,7 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer forgotPassword  */
     forgotPassword = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.setDetailsForForgotPassword(req);
+            let manage_data = await CustomerProvider.setDetailsForForgotPassword();
             let forgotPassword = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, forgotPassword)
         } catch (err) {
