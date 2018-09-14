@@ -9,7 +9,7 @@ let requestToServer = async (reqData) => {
             headers: {
                 "APP_ID": reqData.app_id || config.magentoAppId,
                 "Authorization": reqData.authorization,
-                'Content-Type': "application/json",
+                'Content-Type': reqData.contentType,
             },
             // timeout: 10000,
         };

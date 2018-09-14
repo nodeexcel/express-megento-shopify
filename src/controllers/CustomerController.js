@@ -13,6 +13,7 @@ export class CustomerController extends BaseAPIController {
                 manage_data.endUrl = req.url_path + "/V1/customers/me";
                 manage_data.authorization = "Bearer "+login;
                 manage_data.method = "GET"; 
+                delete manage_data.contentType;
                 let loginDetails = await request.requestToServer(manage_data);
                 // loginDetails.token = login;
                 login={token:login};

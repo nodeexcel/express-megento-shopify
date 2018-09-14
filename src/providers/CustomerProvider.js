@@ -10,6 +10,7 @@ let setDetailsForRegister = async (body, headers, url_path, method, store) => {
         manage_data.body = data;
         manage_data.endUrl = url_path + "/customers.json";
         manage_data.method = method;
+        manage_data.contentType = headers['content-type'];
         return manage_data;
     } else if(store == 'magento') {
         manage_data.endUrl = url_path + "/V1/customers";
@@ -17,6 +18,7 @@ let setDetailsForRegister = async (body, headers, url_path, method, store) => {
         manage_data.method = method;
         manage_data.app_id = headers.app_id;
         manage_data.authorization = headers.authorization;
+        manage_data.contentType = headers['content-type'];
         return manage_data;
     } else {
         // coming soon
@@ -35,6 +37,7 @@ let setDetailsForLogin = async (body, headers, url_path, method, store) => {
         manage_data.method = method;
         manage_data.app_id = headers.app_id;
         // manage_data.authorization = headers.authorization;
+        manage_data.contentType = headers['content-type'];
         return manage_data;
     } else {
         // coming soon
