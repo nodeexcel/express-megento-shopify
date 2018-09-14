@@ -6,7 +6,7 @@ export class CategoryController extends BaseAPIController {
     /* Controller for get all categories*/
     getAllCategories = async (req, res, next) => {
         try {
-            let manage_data = await CategoryProvider.setPathForGetCategories(req.headers, req.method, req.isMagento);
+            let manage_data = await CategoryProvider.setPathForGetCategories(req.headers, req.url_path, req.method, req.store);
             let getAllCategories = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, getAllCategories)
         } catch (err) {
@@ -17,7 +17,7 @@ export class CategoryController extends BaseAPIController {
     /* Controller for get product for a category*/
     categoryProduct = async (req, res, next) => {
         try {
-            let manage_data = await CategoryProvider.setPathForGetCategoryProduct(req.body, req.headers, req.isMagento);
+            let manage_data = await CategoryProvider.setPathForGetCategoryProduct(req.body, req.headers, req.url_path, req.store);
             let categoryProduct = await request.requestToServer(manage_data);
             if(req.isMagento){
                 categoryProduct['items'].forEach((value, key) => {

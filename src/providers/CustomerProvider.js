@@ -1,39 +1,43 @@
 import config from '../config';
-let setDetailsForRegister = async (body, headers, method, isShopify) => {
+let setDetailsForRegister = async (body, headers, url_path, method, store) => {
     let manage_data = {};
     let data = {customer:{}}
-    if(isShopify){
+    if(store == 'shopify'){
         data['customer']['first_name'] = body.customer.firstname;
         data['customer']['last_name'] = body.customer.lastname;
         data['customer']['email'] = body.customer.email;
         data['passsword'] = body.passsword;
         manage_data.body = data;
-        manage_data.endUrl = config.shopifyUrl + "/customers.json";
+        manage_data.endUrl = url_path + "/customers.json";
         manage_data.method = method;
         return manage_data;
-    } else {
+    } else if(store == 'magento') {
         manage_data.endUrl = config.magentoUrl + "/V1/customers";
         manage_data.body = body;
         manage_data.method = method;
         manage_data.app_id = headers.app_id;
         manage_data.authorization = headers.authorization;
         return manage_data;
+    } else {
+        // coming soon
     }
 };
 
-let setDetailsForLogin = async (body, headers, method, isShopify) => {
+let setDetailsForLogin = async (body, headers, url_path, method, store) => {
     let manage_data = {};
-    if(isShopify){
-        manage_data.endUrl = config.shopifyUrl + "/customers/search.json?query=email:"+body.username;
+    if(store == 'shopify'){
+        manage_data.endUrl = url_path + "/customers/search.json?query=email:"+body.username;
         manage_data.method = config.getMethod;
         return manage_data;
-    } else {
+    } else if(store == 'magento') {
         manage_data.endUrl = config.magentoUrl + "/V1/integration/customer/token";
         manage_data.body = body;
         manage_data.method = method;
         manage_data.app_id = headers.app_id;
-        manage_data.authorization = headers.authorization;
+        // manage_data.authorization = headers.authorization;
         return manage_data;
+    } else {
+        // coming soon
     }
 };
 

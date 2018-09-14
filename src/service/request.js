@@ -1,7 +1,7 @@
 import request from 'request'
 import config from '../config'
 let requestToServer = async (reqData) => {
-
+    console.log(reqData);
     return new Promise(function (resolve, reject) {
         var option = {
             url: reqData.endUrl,

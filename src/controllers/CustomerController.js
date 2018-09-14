@@ -7,7 +7,7 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer login  */
     login = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.setDetailsForLogin(req.body, req.headers, req.method, req.isShopify);
+            let manage_data = await CustomerProvider.setDetailsForLogin(req.body, req.headers, req.url_path, req.method, req.store);
             let login = await request.requestToServer(manage_data);
             if(req.isMagento){
                 manage_data.endUrl = config.magentoUrl + "/V1/customers/me";
@@ -29,7 +29,7 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer register  */
     register = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.setDetailsForRegister(req.body, req.headers, req.method, req.isShopify);
+            let manage_data = await CustomerProvider.setDetailsForRegister(req.body, req.headers, req.url_path, req.method, req.store);
             let register = await request.requestToServer(manage_data);
             let final_data = {}
             if(req.isShopify){
