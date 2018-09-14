@@ -12,7 +12,7 @@ let setDetailsForRegister = async (body, headers, url_path, method, store) => {
         manage_data.method = method;
         return manage_data;
     } else if(store == 'magento') {
-        manage_data.endUrl = config.magentoUrl + "/V1/customers";
+        manage_data.endUrl = url_path + "/V1/customers";
         manage_data.body = body;
         manage_data.method = method;
         manage_data.app_id = headers.app_id;
@@ -30,7 +30,7 @@ let setDetailsForLogin = async (body, headers, url_path, method, store) => {
         manage_data.method = config.getMethod;
         return manage_data;
     } else if(store == 'magento') {
-        manage_data.endUrl = config.magentoUrl + "/V1/integration/customer/token";
+        manage_data.endUrl = url_path + "/V1/integration/customer/token";
         manage_data.body = body;
         manage_data.method = method;
         manage_data.app_id = headers.app_id;
