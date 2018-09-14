@@ -27,7 +27,7 @@ let setDetailsForLogin = async (body, headers, url_path, method, store) => {
     let manage_data = {};
     if(store == 'shopify'){
         manage_data.endUrl = url_path + "/customers/search.json?query=email:"+body.username;
-        manage_data.method = config.getMethod;
+        manage_data.method = "GET";
         return manage_data;
     } else if(store == 'magento') {
         manage_data.endUrl = url_path + "/V1/integration/customer/token";
