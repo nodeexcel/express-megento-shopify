@@ -48,8 +48,28 @@ let setDetailsForForgotPassword = async () => {
     
 };
 
+let setDetailsForUpdate = async (body, params, headers, url_path, method, store) => {
+    let manage_data = {};
+    let data = {customer:{}}
+    if(store == 'shopify'){
+        // return manage_data;
+    } else if(store == 'magento') {
+        manage_data.endUrl = url_path + "/V1/customers/"+params.id;
+        manage_data.body = body;
+        manage_data.method = method;
+        manage_data.app_id = headers.app_id;
+        manage_data.authorization = headers.authorization;
+        manage_data.contentType = headers['content-type'];
+        return manage_data;
+    } else {
+        // coming soon
+    }
+};
+
+
 export default {
     setDetailsForLogin,
     setDetailsForRegister,
     setDetailsForForgotPassword,
+    setDetailsForUpdate,
 };
