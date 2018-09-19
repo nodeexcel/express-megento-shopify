@@ -3,6 +3,9 @@ import config from '../config'
 let requestToServer = async (reqData) => {
     console.log(reqData);
     return new Promise(function (resolve, reject) {
+        if(!reqData.storefrontAccessToken){
+            reqData.body = JSON.stringify(reqData.body);
+        }
         var option = {
             url: reqData.endUrl,
             method: reqData.method,
@@ -10,7 +13,9 @@ let requestToServer = async (reqData) => {
                 "APP_ID": reqData.app_id || config.magentoAppId,
                 "Authorization": reqData.authorization,
                 'Content-Type': reqData.contentType,
+                'X-Shopify-Storefront-Access-Token': reqData.storefrontAccessToken
             },
+            body: reqData.body 
             // timeout: 10000,
         };
         if(reqData.method == 'POST'){

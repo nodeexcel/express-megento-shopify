@@ -1,16 +1,27 @@
 import config from '../config';
 let setDetailsForRegister = async (body, headers, url_path, method, store) => {
     let manage_data = {};
-    let data = {customer:{}}
     if(store == 'shopify'){
-        data['customer']['first_name'] = body.customer.firstname;
-        data['customer']['last_name'] = body.customer.lastname;
-        data['customer']['email'] = body.customer.email;
-        data['passsword'] = body.passsword;
-        manage_data.body = data;
-        manage_data.endUrl = url_path + "/customers.json";
+        manage_data.body = `mutation {
+            customerCreate(input: {
+              firstName: ${body.customer.firstname},
+              lastName: ${body.customer.lastname},
+              email: ${body.customer.email},
+              password: ${body.passsword}
+            }) {
+              userErrors {
+                field
+                message
+              }
+              customer {
+                id
+              }
+            }
+          }`;
+        manage_data.endUrl = url_path;
         manage_data.method = method;
-        manage_data.contentType = headers['content-type'];
+        manage_data.contentType = ;
+        manage_data.storefrontAccessToken = config.storefrontAccessToken;
         return manage_data;
     } else if(store == 'magento') {
         manage_data.endUrl = url_path + "/V1/customers";

@@ -2,6 +2,7 @@ module.exports = {
     port: 8000,
     bodyLimit: '100kb',
     corsHeaders: ['Link'],
+    storefrontAccessToken: '5b63592a6e602041ce38fdac4f1d3473',
     db: {
         host: 'localhost',
         name: 'test',

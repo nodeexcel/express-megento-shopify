@@ -31,26 +31,27 @@ export class CustomerController extends BaseAPIController {
     register = async (req, res, next) => {
         try {
             let manage_data = await CustomerProvider.setDetailsForRegister(req.body, req.headers, req.url_path, req.method, req.store);
-            let register = await request.requestToServer(manage_data);
-            let final_data = {}
-            if(req.isShopify){
-                final_data = {
-                    id: register.customer.id,
-                    firstname: register.customer.first_name,
-                    lastname: register.customer.last_name,
-                    email: register.customer.email,
-                    addresses: register.customer.addresses
-                }
-            }else {
-                final_data = {
-                    id:register.id,
-                    firstname: register.firstname,
-                    lastname: register.lastname,
-                    email: register.email,
-                    addresses: register.addresses
-                }
-            }
-            this.handleSuccessResponse(res, next, final_data)
+            console.log(manage_data)
+            // let register = await request.requestToServer(manage_data);
+            // let final_data = {}
+            // if(req.isShopify){
+            //     final_data = {
+            //         id: register.customer.id,
+            //         firstname: register.customer.first_name,
+            //         lastname: register.customer.last_name,
+            //         email: register.customer.email,
+            //         addresses: register.customer.addresses
+            //     }
+            // }else {
+            //     final_data = {
+            //         id:register.id,
+            //         firstname: register.firstname,
+            //         lastname: register.lastname,
+            //         email: register.email,
+            //         addresses: register.addresses
+            //     }
+            // }
+            // this.handleSuccessResponse(res, next, final_data)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }
