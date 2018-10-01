@@ -14,7 +14,8 @@ module.exports = {
         store: "magento"
     },
     "com.excellence.shopify":{
-        url: "https://ce9c132322821fc92bcc7bcdbcb38751:f05828608e4ac2db3d456a6e13d8491e@manishiitg.myshopify.com/admin",
+        // url: "https://ce9c132322821fc92bcc7bcdbcb38751:f05828608e4ac2db3d456a6e13d8491e@manishiitg.myshopify.com/admin",
+        url: "https://manishiitg.myshopify.com/api/graphql",
         store: "shopify"
     }
 }

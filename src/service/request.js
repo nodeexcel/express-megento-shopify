@@ -18,9 +18,9 @@ let requestToServer = async (reqData) => {
             body: reqData.body 
             // timeout: 10000,
         };
-        if(reqData.method == 'POST'){
-            option.body = JSON.stringify(reqData.body);
-        }
+        // if(reqData.method == 'POST'){
+        //     option.body = JSON.stringify(reqData.body);
+        // }
         request(option, function (error, result, body) {
             if (error) {
                 reject(error);
