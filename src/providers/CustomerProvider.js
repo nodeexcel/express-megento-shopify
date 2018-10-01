@@ -124,16 +124,7 @@ let setDetailsToGetDataByAccessToken = async (token, url_path, method, store) =>
         manage_data.endUrl = url_path + "/V1/customers/me";
         manage_data.authorization = "Bearer " + token;
         manage_data.method = "GET";
-        // manage_data.app_id = headers.app_id;
-
-        // manage_data.endUrl = url_path + "/V1/integration/customer/token";
-        // manage_data.body = body;
-        // manage_data.method = method;
-        // manage_data.authorization = headers.authorization;
-        // delete manage_data.contentType;
-
         return manage_data;
-
 
     } else {
         // coming soon
