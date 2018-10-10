@@ -5,15 +5,11 @@ export default class BaseAPIController {
 
   handleErrorResponse(res, err) {
     res.json({
-      status: 0,
       error: errorHandler(err)
     })
   }
 
   handleSuccessResponse(res, next, data) {
-    res.json({
-      status: 1,
-      data: data
-    })
+    res.json(data)
   }
 }

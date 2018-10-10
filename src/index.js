@@ -7,7 +7,6 @@ import glob from 'glob'
 import chalk from 'chalk'
 import bodyParser from 'body-parser'
 import config from './config'
-import db from './models'
 import middleware from './middleware/auth.js'
 
 const app = express()
@@ -16,7 +15,6 @@ app.server = http.createServer(app)
 // logger
 app.use(morgan('dev'))
 
-app.use(db());
 app.use(cors())
 app.use("*", (req, res, next)=>{
   if(req.method == 'OPTIONS'){
@@ -25,10 +23,12 @@ app.use("*", (req, res, next)=>{
     next()
   }
 })
-app.use("/V1/*", middleware.api);
+
 // 3rd party middleware
 app.use(bodyParser.json({ limit: config.bodyLimit }))
 app.use(bodyParser.urlencoded({ extended: true }))
+
+
 const initRoutes = (app) => {
     // including all routes
   glob('./routes/*.js', { cwd: path.resolve('./src') }, (err, routes) => {

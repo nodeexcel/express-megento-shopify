@@ -1,39 +1,52 @@
 import request from 'request'
 import config from '../config'
-let API = async (req) => {
-    try {
-        request({
-            // protocol: 'http:',
-            // url: `${config.url}/Magento-CE-2.1.9_sample_data-2017-09-13-03-48-19/index.php/rest`+req.originalUrl,
-            // url:"https://www.google.com",
-            method: req.method,
+let requestToServer = async (reqData) => {
+    console.log(reqData);
+    return new Promise(function (resolve, reject) {
+        if(!reqData.storefrontAccessToken){
+            reqData.body = JSON.stringify(reqData.body);
+        }
+        var option = {
+            url: reqData.endUrl,
+            method: reqData.method,
             headers: {
-                APP_ID: req.headers.app_id,
-                "Authorization": req.headers.authorization,
-                'Content-Type': 'application/json',
+                "APP_ID": reqData.app_id || config.magentoAppId,
+                "Authorization": reqData.authorization,
+                'Content-Type': reqData.contentType,
+                'X-Shopify-Storefront-Access-Token': reqData.storefrontAccessToken
             },
-            timeout: 10000,
-            body: JSON.stringify(req.body)
-        }, function (error, result, body) {
+            body: reqData.body 
+            // timeout: 10000,
+        };
+        // if(reqData.method == 'POST'){
+        //     option.body = JSON.stringify(reqData.body);
+        // }
+        request(option, function (error, result, body) {
             if (error) {
-                throw new Error(error);
+                reject(error);
             } else if (result.statusCode === 500) {
                 var allData = JSON.parse(body);
-                return allData;
+                allData.statusCode = 500;
+                reject(allData);
             } else {
+                // console.log(body)
                 allData = JSON.parse(body);
                 if (allData.data) {
-                    return allData.data;
+                    resolve(allData.data);
                 } else {
-                    return allData;
+                    if(allData.errors){
+                        reject(allData.errors);
+                    } else if(allData.message) {
+                        reject(allData.message);
+                    } else {
+                        resolve(allData);
+                    }
                 }
             }
         });
-    } catch (err) {
-        throw new Error(err)
-    }
+    });
 }
 
 export default {
-    API
+    requestToServer
 }

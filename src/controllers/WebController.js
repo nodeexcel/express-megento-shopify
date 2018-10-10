@@ -6,8 +6,8 @@ export class WebController extends BaseAPIController {
     /* Controller for Web config  */
     config = async (req, res, next) => {
         try {
-            let manage_data = await WebProvider.config(req);
-            let web_config = await request.API(req);
+            let manage_data = await WebProvider.setPathForConfigPage(req.method, req.url_path, req.store);
+            let web_config = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, web_config)
         } catch (err) {
             this.handleErrorResponse(res, err)
@@ -15,9 +15,10 @@ export class WebController extends BaseAPIController {
     }
 
     /* Controller for allowed countries  */
-    getAllowedCountries = async (req, res) => {
+    getAllowedCountries = async (req, res, next) => {
         try {
-            let allowedCountries = await request.API(req);
+            let manage_data = await WebProvider.setPathForGetAllowedCountries(req.method, req.url_path, req.store);
+            let allowedCountries = await request.requestToServer(manage_data);
             this.handleSuccessResponse(res, next, allowedCountries)
         } catch (err) {
             this.handleErrorResponse(res, err)
