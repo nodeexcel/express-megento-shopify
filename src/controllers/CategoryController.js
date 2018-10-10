@@ -23,7 +23,7 @@ export class CategoryController extends BaseAPIController {
                     "children_data": data
                 };
             } else {
-                // coming soon
+                throw "only magento and shopify platform supported";
             }
             this.handleSuccessResponse(res, next, getAllCategories)
         } catch (err) {
@@ -79,7 +79,7 @@ export class CategoryController extends BaseAPIController {
                     "items": data
                 }
             } else {
-                // coming soon
+                throw "only magento and shopify platform supported";
             }
             this.handleSuccessResponse(res, next, categoryProduct)
         } catch (err) {

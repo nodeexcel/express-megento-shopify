@@ -24,7 +24,7 @@ let setDetailsForRegister = async (body, headers, url_path, method, store) => {
         manage_data.endUrl = url_path;
         manage_data.method = method;
         manage_data.contentType = "application/graphql";
-        manage_data.storefrontAccessToken = config.storefrontAccessToken;
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
     } else if (store == 'magento') {
         manage_data.endUrl = url_path + "/V1/customers";
@@ -35,7 +35,7 @@ let setDetailsForRegister = async (body, headers, url_path, method, store) => {
         manage_data.contentType = headers['content-type'];
         return manage_data;
     } else {
-        // coming soon
+        throw "only magento and shopify platform supported";
     }
 };
 
@@ -64,7 +64,7 @@ let setDetailsForLogin = async (body, headers, url_path, method, store) => {
         manage_data.endUrl = url_path;
         manage_data.method = method;
         manage_data.contentType = "application/graphql";
-        manage_data.storefrontAccessToken = config.storefrontAccessToken;
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
     } else if (store == 'magento') {
         manage_data.endUrl = url_path + "/V1/integration/customer/token";
@@ -75,7 +75,7 @@ let setDetailsForLogin = async (body, headers, url_path, method, store) => {
         manage_data.contentType = headers['content-type'];
         return manage_data;
     } else {
-        // coming soon
+        throw "only magento and shopify platform supported";
     }
 };
 
@@ -99,11 +99,11 @@ let setDetailsForUpdate = async (body, params, headers, url_path, method, store)
         manage_data.contentType = headers['content-type'];
         return manage_data;
     } else {
-        // coming soon
+        throw "only magento and shopify platform supported";
     }
 };
 
-let setDetailsToGetDataByAccessToken = async (token, url_path, method, store) => {
+let setDetailsToGetDataByAccessToken = async (token, headers, url_path, method, store) => {
     let manage_data = {};
     if (store == 'shopify') {
         manage_data.body = `{
@@ -117,7 +117,7 @@ let setDetailsToGetDataByAccessToken = async (token, url_path, method, store) =>
         manage_data.endUrl = url_path;
         manage_data.method = method;
         manage_data.contentType = "application/graphql";
-        manage_data.storefrontAccessToken = config.storefrontAccessToken;
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
 
     } else if (store == 'magento') {
@@ -127,7 +127,7 @@ let setDetailsToGetDataByAccessToken = async (token, url_path, method, store) =>
         return manage_data;
 
     } else {
-        // coming soon
+        throw "only magento and shopify platform supported";
     }
 };
 

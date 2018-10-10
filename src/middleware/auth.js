@@ -15,6 +15,7 @@ export class AuthController {
                     req.isMagento = true;
                 }
                 if(data.store == 'shopify'){
+                    req.headers["storefrontAccessToken"] = data.storefrontAccessToken
                     req.isShopify = true;
                 }
                 next()

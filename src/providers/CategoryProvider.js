@@ -30,10 +30,10 @@ let setPathForGetCategories = (async function (headers, url_path, method, store)
         manage_data.endUrl = url_path;
         manage_data.method = "POST";
         manage_data.contentType = "application/graphql";
-        manage_data.storefrontAccessToken = config.storefrontAccessToken;
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
     } else {
-        // coming soon
+        throw "only magento and shopify platform supported";
     }
 });
 let setPathForGetCategoryProduct = (async function (body, headers, url_path, store) {
@@ -106,10 +106,10 @@ let setPathForGetCategoryProduct = (async function (body, headers, url_path, sto
         manage_data.endUrl = url_path;
         manage_data.method = "POST";
         manage_data.contentType = "application/graphql";
-        manage_data.storefrontAccessToken = config.storefrontAccessToken;
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
     } else {
-        //coming soon
+        throw "only magento and shopify platform supported";
     }
 });
 

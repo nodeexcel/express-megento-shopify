@@ -10,7 +10,7 @@ export class CustomerController extends BaseAPIController {
             let manage_data = await CustomerProvider.setDetailsForLogin(req.body, req.headers, req.url_path, req.method, req.store);
             let loginResponse = await request.requestToServer(manage_data);
             if (req.isMagento) {
-                let manageDataToGetCustomerData = await CustomerProvider.setDetailsToGetDataByAccessToken(loginResponse, req.url_path, req.method, req.store);
+                let manageDataToGetCustomerData = await CustomerProvider.setDetailsToGetDataByAccessToken(loginResponse, req.headers, req.url_path, req.method, req.store);
                 let loginResponseDetails = await request.requestToServer(manageDataToGetCustomerData);
                 loginResponse = {
                     token: loginResponse
@@ -22,7 +22,7 @@ export class CustomerController extends BaseAPIController {
                         throw loginResponse["customerAccessTokenCreate"]["userErrors"][0]["message"];
                     }
                 }   
-                let manageDataToGetCustomerData = await CustomerProvider.setDetailsToGetDataByAccessToken(loginResponse["customerAccessTokenCreate"]["customerAccessToken"]["accessToken"], req.url_path, req.method, req.store);
+                let manageDataToGetCustomerData = await CustomerProvider.setDetailsToGetDataByAccessToken(loginResponse["customerAccessTokenCreate"]["customerAccessToken"]["accessToken"], req.headers, req.url_path, req.method, req.store);
                 let loginResponseDetails = await request.requestToServer(manageDataToGetCustomerData);
 
                 loginResponse = {
@@ -35,7 +35,7 @@ export class CustomerController extends BaseAPIController {
                     lastname: loginResponseDetails["customer"]["lastName"]
                 }, loginResponse);
             } else {
-                // coming soon
+                throw "only magento and shopify platform supported";
             }
             this.handleSuccessResponse(res, next, loginResponse)
         } catch (err) {
@@ -73,7 +73,7 @@ export class CustomerController extends BaseAPIController {
                     addresses: registerResponse.addresses
                 }
             } else {
-                // comming soon
+                throw "only magento and shopify platform supported";
             }
             this.handleSuccessResponse(res, next, final_data)
         } catch (err) {
