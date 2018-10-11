@@ -94,11 +94,35 @@ export class CustomerController extends BaseAPIController {
 
     /* Controller for customer update  */
     update = async (req, res, next) => {
-        console.log(req)
         try {
+            let final_data = {};
             let manage_data = await CustomerProvider.setDetailsForUpdate(req.body, req.params, req.headers, req.url_path, req.method, req.store);
-            let update = await request.requestToServer(manage_data);
-            let final_data = update;
+            let updateResponse = await request.requestToServer(manage_data);
+            if (req.isShopify) {
+                if (updateResponse["customerCreate"] == null) {
+                    throw "please try again ";
+                }
+                if (updateResponse["customerUpdate"]["userErrors"].length) {
+                    throw updateResponse["customerUpdate"]["userErrors"][0]["message"];
+                }
+                final_data = {
+                    id: updateResponse["customerUpdate"]["customer"]["id"],
+                    firstname: updateResponse["customerUpdate"]["customer"]["firstName"],
+                    lastname: updateResponse["customerUpdate"]["customer"]["lastName"],
+                    email: updateResponse["customerUpdate"]["customer"]["email"],
+                    addresses: updateResponse["customerUpdate"]["customer"]["email"],
+                }
+            } else if (req.isMagento) {
+                final_data = {
+                    id: updateResponse.id,
+                    firstname: updateResponse.firstname,
+                    lastname: updateResponse.lastname,
+                    email: updateResponse.email,
+                    addresses: updateResponse.addresses
+                }
+            } else {
+                throw "only magento and shopify platform supported";
+            }
             this.handleSuccessResponse(res, next, final_data)
         } catch (err) {
             this.handleErrorResponse(res, err)

@@ -89,7 +89,31 @@ let setDetailsForUpdate = async (body, params, headers, url_path, method, store)
         customer: {}
     }
     if (store == 'shopify') {
-        // return manage_data;
+        manage_data.body = `mutation {
+            customerUpdate(customerAccessToken: "${headers.token}", customer:{
+              ${body.customer.firstname ? `firstName: "${body.customer.firstname}",` : `` }
+              ${body.customer.lastname ? `lastName: "${body.customer.lastname}",` : `` }
+              ${body.customer.email ? `email: "${body.customer.email}",` : `` }
+              ${body.customer.phone ? `phone: "${body.customer.phone}",` : `` }
+              ${body.customer.acceptsMarketing ? `acceptsMarketing: "${body.customer.acceptsMarketing}"` : `` }
+            }) {
+              userErrors {
+                field
+                message
+              }
+              customer {
+                id
+                email
+                firstName
+                lastName
+              }
+            }
+          }`;
+        manage_data.endUrl = url_path;
+        manage_data.method = "POST";
+        manage_data.contentType = "application/graphql";
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
+        return manage_data;
     } else if (store == 'magento') {
         manage_data.endUrl = url_path + "/V1/customers/" + params.id;
         manage_data.body = body;
