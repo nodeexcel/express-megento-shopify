@@ -32,7 +32,13 @@ let requestToServer = async (reqData) => {
                 // console.log(body)
                 allData = JSON.parse(body);
                 if (allData.data) {
-                    resolve(allData.data);
+                    if(allData.errors){
+                        if(allData.errors.length){
+                            reject(allData.errors[0].message);
+                        }
+                    } else {
+                        resolve(allData.data);
+                    }
                 } else {
                     if(allData.errors){
                         reject(allData.errors);
