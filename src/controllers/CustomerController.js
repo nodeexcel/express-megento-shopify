@@ -50,9 +50,6 @@ export class CustomerController extends BaseAPIController {
             let registerResponse = await request.requestToServer(manage_data);
             let final_data = {}
             if (req.isShopify) {
-                if (registerResponse["customerCreate"] == null) {
-                    throw "please try again ";
-                }
                 if (registerResponse["customerCreate"]["userErrors"].length) {
                     throw registerResponse["customerCreate"]["userErrors"][0]["message"];
                 }
@@ -99,9 +96,6 @@ export class CustomerController extends BaseAPIController {
             let manage_data = await CustomerProvider.setDetailsForUpdate(req.body, req.params, req.headers, req.url_path, req.method, req.store);
             let updateResponse = await request.requestToServer(manage_data);
             if (req.isShopify) {
-                if (updateResponse["customerCreate"] == null) {
-                    throw "please try again ";
-                }
                 if (updateResponse["customerUpdate"]["userErrors"].length) {
                     throw updateResponse["customerUpdate"]["userErrors"][0]["message"];
                 }
