@@ -9,7 +9,7 @@ let setPathForProducts = (async function(headers, url_path, method, store, param
         return manage_data;
     } else if (store == 'shopify') {
         manage_data.body = `{
-            node(id:${params.SKU_or_id}) {
+            node(id:"${params.SKU_or_id}") {
                 id
                 ... on Product {
                     id
