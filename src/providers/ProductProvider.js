@@ -2,14 +2,14 @@ import config from '../config';
 let setPathForProducts = (async function(headers, url_path, method, store, params) {
     let manage_data = {};
     if (store == 'magento') {
-        manage_data.endUrl = url_path + `/V1/products/${params.SKU_or_id}`;
+        manage_data.endUrl = url_path + `/V1/products/${params.sku}`;
         manage_data.method = method;
         manage_data.app_id = headers.app_id;
         manage_data.authorization = headers.authorization;
         return manage_data;
     } else if (store == 'shopify') {
         manage_data.body = `{
-            node(id:"${params.SKU_or_id}") {
+            node(id:"${params.sku}") {
                 id
                 ... on Product {
                     id

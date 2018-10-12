@@ -5,7 +5,7 @@ export default (app) => {
 
     // Route for get one product
 
-    app.route('/products/getOneProduct/:SKU_or_id').get(middleware.appData, products.getOneProduct);
+    app.route('/products/:sku').get(middleware.appData, products.getOneProduct);
 
     return app
 }
