@@ -21,7 +21,13 @@ let requestToServer = async (reqData) => {
         // if(reqData.method == 'POST'){
         //     option.body = JSON.stringify(reqData.body);
         // }
+        console.log("000000000000000000000000000000000000000000000000")
+        console.log(option)
+        console.log("000000000000000000000000000000000000000000000000")
         request(option, function (error, result, body) {
+            console.log("----------------------------------------------------------------------------------------")
+            // console.log(result.statusCode)
+            console.log("----------------------------------------------------------------------------------------")
             if (error) {
                 reject(error);
             } else if (result.statusCode === 500) {
@@ -29,7 +35,7 @@ let requestToServer = async (reqData) => {
                 allData.statusCode = 500;
                 reject(allData);
             } else {
-                // console.log(body)
+                console.log(body)
                 allData = JSON.parse(body);
                 if (allData.data) {
                     if(allData.errors){

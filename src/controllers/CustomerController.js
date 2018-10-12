@@ -15,7 +15,15 @@ export class CustomerController extends BaseAPIController {
                 loginResponse = {
                     token: loginResponse
                 };
-                loginResponse = Object.assign(loginResponseDetails, loginResponse);
+                // loginResponse = Object.assign(loginResponseDetails, loginResponse);
+                loginResponse = Object.assign({
+                    id: loginResponseDetails["id"],
+                    email: loginResponseDetails["email"],
+                    firstname: loginResponseDetails["firstname"],
+                    lastname: loginResponseDetails["lastname"],
+                    addresses: loginResponseDetails["addresses"] ? loginResponseDetails["addresses"] : []
+                }, loginResponse);
+
             } else if (req.isShopify) {
                 if (loginResponse["customerAccessTokenCreate"]) {
                     if (loginResponse["customerAccessTokenCreate"]["userErrors"].length) {
@@ -32,7 +40,8 @@ export class CustomerController extends BaseAPIController {
                     id: loginResponseDetails["customer"]["id"],
                     email: loginResponseDetails["customer"]["email"],
                     firstname: loginResponseDetails["customer"]["firstName"],
-                    lastname: loginResponseDetails["customer"]["lastName"]
+                    lastname: loginResponseDetails["customer"]["lastName"],
+                    addresses: loginResponseDetails["addresses"] ? loginResponseDetails["addresses"] : []
                 }, loginResponse);
             } else {
                 throw "only magento and shopify platform supported";
@@ -81,9 +90,22 @@ export class CustomerController extends BaseAPIController {
     /* Controller for customer forgotPassword  */
     forgotPassword = async (req, res, next) => {
         try {
-            let manage_data = await CustomerProvider.setDetailsForForgotPassword();
-            let forgotPassword = await request.requestToServer(manage_data);
-            this.handleSuccessResponse(res, next, forgotPassword)
+            let manage_data = await CustomerProvider.setDetailsForForgotPassword(req.body, req.params, req.headers, req.url_path, req.method, req.store);
+            let forgotPasswordResponse = await request.requestToServer(manage_data);
+            let final_data = {}
+            if (req.isShopify) {
+                if (forgotPasswordResponse["customerRecover"]["userErrors"].length) {
+                    throw forgotPasswordResponse["customerRecover"]["userErrors"][0]["message"];
+                }
+                final_data = {
+                    message: "Email with password reset link has been sent to register email id"
+                }
+            } else if (req.isMagento) {
+                final_data = {}
+            } else {
+                throw "only magento and shopify platform supported";
+            }
+            this.handleSuccessResponse(res, next, final_data)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }

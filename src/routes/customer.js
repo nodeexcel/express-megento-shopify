@@ -10,7 +10,7 @@ export default (app) => {
     app.route('/customer/register').post( middleware.appData, customer.register);
 
     // Route for customer forgot password
-    app.route('/customer/forgot').put(customer.forgotPassword);
+    app.route('/customer/forgotPassword').put( middleware.appData, customer.forgotPassword);
 
     // Route for customer update
     app.route('/customer/update/:id').put( middleware.appData, customer.update);

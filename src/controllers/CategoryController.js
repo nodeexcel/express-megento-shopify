@@ -7,6 +7,7 @@ export class CategoryController extends BaseAPIController {
     getAllCategories = async (req, res, next) => {
         try {
             let data = [];
+            let itemData = {};
             let manage_data = await CategoryProvider.setPathForGetCategories(req.headers, req.url_path, req.method, req.store);
             let getAllCategories = await request.requestToServer(manage_data);
             if (req.isMagento) {
@@ -14,10 +15,16 @@ export class CategoryController extends BaseAPIController {
             } else if (req.isShopify) {
                 let allCategories = getAllCategories["shop"]["collections"]["edges"];
                 allCategories.forEach((item, key) => {
-                    item["node"]["name"] = item["node"]["title"];
-                    data.push(item["node"]);
+                    itemData = {
+                        "id": item["node"]["id"],
+                        "name": item["node"]["title"],
+                        "is_active": true,
+                        "children_data": []
+                    };
+                    data.push(itemData);
                 })
                 getAllCategories = {
+                    "id": null,
                     "name": "Default Category",
                     "is_active": true,
                     "children_data": data
@@ -36,6 +43,8 @@ export class CategoryController extends BaseAPIController {
         try {
             let data = [];
             let itemData = {};
+            let defaultPrice = "";
+            let defaultSKU = "";
             let manage_data = await CategoryProvider.setPathForGetCategoryProduct(req.body, req.headers, req.url_path, req.store);
             let categoryProduct = await request.requestToServer(manage_data);
             if (req.isMagento) {
@@ -53,14 +62,20 @@ export class CategoryController extends BaseAPIController {
                     let allVariants = item["node"]["variants"]["edges"];
                     let variantData = [];
                     allVariants.forEach((item, key) => {
+                        if(item["node"]["title"] == "Default Title"){
+                            defaultPrice = item["node"]["price"];
+                            defaultSKU = item["node"]["sku"];
+                        } else {
+                            defaultPrice = "";
+                        }
                         variantData.push(item["node"]);
                     })
                     itemData = {
                         "id": item["node"]["id"],
-                        "sku": "",
+                        "sku": defaultSKU ? defaultSKU :(allVariants.length ? allVariants[0]["node"]["sku"] : null),
                         "name": item["node"]["title"],
                         "attribute_set_id": null,
-                        "price": null,
+                        "price": defaultPrice ? defaultPrice :(allVariants.length ? allVariants[0]["node"]["price"] : null),
                         "status": item["node"]["availableForSale"],
                         "visibility": null,
                         "type_id": "",

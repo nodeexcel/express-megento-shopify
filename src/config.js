@@ -9,7 +9,7 @@ module.exports = {
         username: 'root'
     },
     "com.excellence.magento":{
-        url: "http://192.168.1.129/magento2/index.php/rest",
+        url: "http://192.168.1.17/magento2/index.php/rest",
         store: "magento"
     },
     "com.excellence.shopify":{

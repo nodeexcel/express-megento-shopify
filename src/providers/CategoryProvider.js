@@ -46,6 +46,12 @@ let setPathForGetCategoryProduct = (async function (body, headers, url_path, sto
         return manage_data;
     } else if (store == 'shopify') {
         let sort = false;
+        let sortBy = '';
+        if(body.sortBy.toUpperCase() == 'NAME'){
+          sortBy = 'TITLE';
+        } else {
+          sortBy = body.sortBy.toUpperCase();
+        }
         if(body.sortOrder.toUpperCase() == 'DESC'){
             sort = true;
         }
@@ -53,7 +59,7 @@ let setPathForGetCategoryProduct = (async function (body, headers, url_path, sto
             node(id: "${body.category_id}") {
               id
               ... on Collection {
-                    products(first: ${body.pageSize}, sortKey: ${body.sortBy.toUpperCase()}, reverse: ${sort}) {
+                    products(first: ${body.pageSize}, sortKey: ${sortBy}, reverse: ${sort}) {
                             edges {
                               node {
                                 id

@@ -79,8 +79,36 @@ let setDetailsForLogin = async (body, headers, url_path, method, store) => {
     }
 };
 
-let setDetailsForForgotPassword = async () => {
-
+let setDetailsForForgotPassword = async (body, params, headers, url_path, method, store) => {
+    let manage_data = {};
+    if (store == 'shopify') {
+        manage_data.body = `mutation {
+            customerRecover(email: "${body.email}") {
+              userErrors {
+                field
+                message
+              }
+            }
+          }`;
+        manage_data.endUrl = url_path;
+        manage_data.method = "POST";
+        manage_data.contentType = "application/graphql";
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
+        return manage_data;
+    } else if (store == 'magento') {
+        manage_data.endUrl = url_path + "/V1/customers/password";
+        manage_data.body = {
+            "email": body.email,
+            "template": "template",
+            "websiteId": 0
+          };
+        manage_data.method = "PUT";
+        manage_data.app_id = headers.app_id;
+        manage_data.authorization = headers.authorization;
+        manage_data.contentType = headers['content-type'];
+    } else {
+        throw "only magento and shopify platform supported";
+    }
 };
 
 let setDetailsForUpdate = async (body, params, headers, url_path, method, store) => {
