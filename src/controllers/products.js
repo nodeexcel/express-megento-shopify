@@ -2,7 +2,7 @@ import BaseAPIController from './BaseAPIController'
 import ProductProvider from '../providers/ProductProvider';
 import request from '../service/request'
 
-export class WebController extends BaseAPIController {
+export class ProductController extends BaseAPIController {
     /* Controller for get product  */
     getOneProduct = async (req, res, next) => {
         try {
@@ -39,5 +39,5 @@ export class WebController extends BaseAPIController {
 
 }
 
-const controller = new WebController()
+const controller = new ProductController()
 export default controller
