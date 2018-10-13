@@ -57,8 +57,16 @@ export class CategoryController extends BaseAPIController {
                     categoryProduct.items[key].imageLink = imageLink.value;
                 })
             } else if (req.isShopify) {
-                let allCategorieProduct = categoryProduct["node"]["products"]["edges"];
-                allCategorieProduct.forEach((item, key) => {
+                let allCategorieProductWithPagination;
+                if(req.body.currentPage>1){                    
+                    req["body"]["lastCursor"] = categoryProduct["node"]["products"]["edges"][(categoryProduct["node"]["products"]["edges"].length)-1]["cursor"];
+                    let manage_data_for_pagination = await CategoryProvider.setDetailsForGetCategoryProductWithPagination(req.body, req.headers, req.url_path, req.store);
+                    let categoryProductWithPaginationResponse = await request.requestToServer(manage_data_for_pagination);
+                    allCategorieProductWithPagination = categoryProductWithPaginationResponse["node"]["products"]["edges"];
+                } else {
+                    allCategorieProductWithPagination = categoryProduct["node"]["products"]["edges"];
+                }
+                allCategorieProductWithPagination.forEach((item, key) => {
                     let allVariants = item["node"]["variants"]["edges"];
                     let variantData = [];
                     allVariants.forEach((item, key) => {

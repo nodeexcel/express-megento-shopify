@@ -47,6 +47,12 @@ let setPathForGetCategoryProduct = (async function (body, headers, url_path, sto
     } else if (store == 'shopify') {
         let sort = false;
         let sortBy = '';
+        let pageSize ;
+        if(body.currentPage > 1){
+          pageSize = ((body.pageSize)*((body.currentPage)-1));
+        } else {
+          pageSize = body.pageSize;
+        }
         if(body.sortBy.toUpperCase() == 'NAME'){
           sortBy = 'TITLE';
         } else {
@@ -59,8 +65,9 @@ let setPathForGetCategoryProduct = (async function (body, headers, url_path, sto
             node(id: "${body.category_id}") {
               id
               ... on Collection {
-                    products(first: ${body.pageSize}, sortKey: ${sortBy}, reverse: ${sort}) {
+                    products(first: ${pageSize}, sortKey: ${sortBy}, reverse: ${sort}) {
                             edges {
+                              cursor
                               node {
                                 id
                                 title
@@ -119,7 +126,78 @@ let setPathForGetCategoryProduct = (async function (body, headers, url_path, sto
     }
 });
 
+let setDetailsForGetCategoryProductWithPagination = (async function (body, headers, url_path, store) {
+  let manage_data = {};
+  if (store == 'magento') {
+    throw "magento pagination is already done";        
+  } else if (store == 'shopify') {
+    let sort = false;
+    let sortBy = '';
+    if(body.sortBy.toUpperCase() == 'NAME'){
+      sortBy = 'TITLE';
+    } else {
+      sortBy = body.sortBy.toUpperCase();
+    }
+    if(body.sortOrder.toUpperCase() == 'DESC'){
+        sort = true;
+    }
+    manage_data.body = `{
+        node(id: "${body.category_id}") {
+          id
+          ... on Collection {
+                products(first: ${body.pageSize}, sortKey: ${sortBy}, reverse: ${sort}, after: "${body.lastCursor}") {
+                        edges {
+                          node {
+                            id
+                            title
+                            description
+                            availableForSale
+                            createdAt
+                            descriptionHtml
+                            onlineStoreUrl
+                            updatedAt
+                            images(first: 100) {
+                                    edges {
+                                      node {
+                                        id
+                                        originalSrc
+                                        transformedSrc
+                                        altText
+                                      }
+                                    }
+                                }
+                            variants(first: 100) {
+                                edges {
+                                  node {
+                                    id
+                                    sku
+                                    title
+                                    price
+                                  }
+                                }
+                              }
+                          }
+                        }
+                        pageInfo {
+                          hasNextPage
+                        }
+                    }
+                }
+            }
+        }
+      `;
+    manage_data.endUrl = url_path;
+    manage_data.method = "POST";
+    manage_data.contentType = "application/graphql";
+    manage_data.storefrontAccessToken = headers.storefrontAccessToken;
+    return manage_data;
+  } else {
+      throw "only magento and shopify platform supported";
+  }
+});
+
 export default {
     setPathForGetCategories,
-    setPathForGetCategoryProduct
+    setPathForGetCategoryProduct,
+    setDetailsForGetCategoryProductWithPagination
 };

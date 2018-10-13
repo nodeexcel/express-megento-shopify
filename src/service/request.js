@@ -1,7 +1,9 @@
 import request from 'request'
 import config from '../config'
 let requestToServer = async (reqData) => {
+    console.log("----------------------------------------------------------------------------------------")
     console.log(reqData);
+    console.log("----------------------------------------------------------------------------------------")
     return new Promise(function (resolve, reject) {
         if(!reqData.storefrontAccessToken){
             reqData.body = JSON.stringify(reqData.body);
@@ -25,9 +27,9 @@ let requestToServer = async (reqData) => {
         console.log(option)
         console.log("000000000000000000000000000000000000000000000000")
         request(option, function (error, result, body) {
-            console.log("----------------------------------------------------------------------------------------")
+            // console.log("----------------------------------------------------------------------------------------")
             // console.log(result.statusCode)
-            console.log("----------------------------------------------------------------------------------------")
+            // console.log("----------------------------------------------------------------------------------------")
             if (error) {
                 reject(error);
             } else if (result.statusCode === 500) {
@@ -35,7 +37,7 @@ let requestToServer = async (reqData) => {
                 allData.statusCode = 500;
                 reject(allData);
             } else {
-                console.log(body)
+                // console.log(body)
                 allData = JSON.parse(body);
                 if (allData.data) {
                     if(allData.errors){

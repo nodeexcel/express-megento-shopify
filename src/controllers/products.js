@@ -10,14 +10,22 @@ export class ProductController extends BaseAPIController {
             let productData = await request.requestToServer(manage_data);
             let product = {}
             if (req.isMagento) {
-                product = productData
+                product = productData.items[0]
             } else if (req.isShopify) {
+               let defaultPrice;
+               productData["node"]["variants"]['edges'].forEach((val, key) => {
+                   if (val["node"]["title"] == "Default Title") {
+                       defaultPrice = val["node"]["price"];
+                   } else {
+                       defaultPrice = null;
+                   }
+               })
                 product = {
                     "id": productData["node"]["id"],
                     "sku": "",
                     "name": productData["node"]["title"],
                     "attribute_set_id": null,
-                    "price": null,
+                    "price": defaultPrice ? defaultPrice : productData["node"]["variants"]["edges"][0]["node"]["price"],
                     "status": productData["node"]["availableForSale"],
                     "visibility": null,
                     "type_id": "",
@@ -28,7 +36,7 @@ export class ProductController extends BaseAPIController {
                     "imageLink": productData["node"]["images"]["edges"][0]["node"]["originalSrc"],
                     "description": productData["node"]["description"],
                     "descriptionHtml": productData["node"]["descriptionHtml"],
-                    "variants": productData["node"]["variantData"]
+                    "variants": productData["node"]["variants"]
                 };
             }
             this.handleSuccessResponse(res, next, product)

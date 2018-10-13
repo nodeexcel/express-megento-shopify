@@ -2,8 +2,8 @@ import config from '../config';
 let setPathForProducts = (async function(headers, url_path, method, store, params) {
     let manage_data = {};
     if (store == 'magento') {
-        manage_data.endUrl = url_path + `/V1/products/${params.sku}`;
-        manage_data.method = method;
+        manage_data.endUrl = url_path + `/V1/products?searchCriteria[filterGroups][0][filters][0][field]=entity_id&searchCriteria[filterGroups][0][filters][0][condition_type]=eq&searchCriteria[filterGroups][0][filters][0][value]=${params.sku}`;
+        manage_data.method = "GET";
         manage_data.app_id = headers.app_id;
         manage_data.authorization = headers.authorization;
         return manage_data;
