@@ -14,6 +14,12 @@ export default (app) => {
 
     // Route for customer update
     app.route('/customer/update/:id').put( middleware.appData, customer.update);
+
+    // Route for add customer address
+    app.route('/customer/addAddress/:id').post( middleware.appData, customer.addAddress);
+
+    // Route for update customer address
+    app.route('/customer/updateAddress/:id').post( middleware.appData, customer.updateAddress);
     
     return app
 }
