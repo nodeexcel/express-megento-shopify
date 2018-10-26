@@ -20,6 +20,12 @@ export default (app) => {
 
     // Route for update customer address
     app.route('/customer/updateAddress/:id').post( middleware.appData, customer.updateAddress);
+
+    // Route for set customer default address
+    app.route('/customer/setDefaultAddress/:id').post( middleware.appData, customer.setDefaultAddress);
+
+    // Route for set customer default address
+    app.route('/customer/deleteAddress/:id').post( middleware.appData, customer.deleteAddress);
     
     return app
 }

@@ -32,16 +32,21 @@ export class CustomerController extends BaseAPIController {
                 }   
                 let manageDataToGetCustomerData = await CustomerProvider.setDetailsToGetDataByAccessToken(loginResponse["customerAccessTokenCreate"]["customerAccessToken"]["accessToken"], req.headers, req.url_path, req.method, req.store);
                 let loginResponseDetails = await request.requestToServer(manageDataToGetCustomerData);
-
                 loginResponse = {
                     token: loginResponse["customerAccessTokenCreate"]["customerAccessToken"]["accessToken"]
                 };
-                loginResponse = Object.assign({
+                let addresses = [];
+                if(loginResponseDetails && (loginResponseDetails["customer"]) && (loginResponseDetails["customer"]["addresses"]) && (loginResponseDetails["customer"]["addresses"]["edges"]))
+                    loginResponseDetails["customer"]["addresses"]["edges"].forEach(element => {
+                        addresses.push(element["node"]);
+                });               
+                    loginResponse = Object.assign({
                     id: loginResponseDetails["customer"]["id"],
                     email: loginResponseDetails["customer"]["email"],
                     firstname: loginResponseDetails["customer"]["firstName"],
                     lastname: loginResponseDetails["customer"]["lastName"],
-                    addresses: loginResponseDetails["customer"]["defaultAddress"]["formatted"] ? {"Full Address":loginResponseDetails["customer"]["defaultAddress"]["formatted"]} : []
+                    addresses: addresses, 
+                    defaultAddress: loginResponseDetails["customer"]["defaultAddress"] ? loginResponseDetails["customer"]["defaultAddress"] : [],
                 }, loginResponse);
             } else {
                 throw "only magento and shopify platform supported";
@@ -192,21 +197,21 @@ export class CustomerController extends BaseAPIController {
             let manage_data = await CustomerProvider.setDetailsForUpdateAddress(req.body, req.params, req.headers, req.url_path, req.method, req.store);
             let updateAddressResponse = await request.requestToServer(manage_data);
             if (req.isShopify) {
-                if (updateAddressResponse["customerAddressCreate"]["userErrors"].length) {
-                    throw updateAddressResponse["customerAddressCreate"]["userErrors"][0]["message"];
+                if (updateAddressResponse["customerAddressUpdate"]["userErrors"].length) {
+                    throw updateAddressResponse["customerAddressUpdate"]["userErrors"][0]["message"];
                 }
                 final_data = {
-                    // id: updateAddressResponse["customerAddressCreate"]["customerAddress"]["id"],
-                    // firstname: updateAddressResponse["customerAddressCreate"]["customerAddress"]["firstName"],
-                    // lastname: updateAddressResponse["customerAddressCreate"]["customerAddress"]["lastName"],
-                    // address1: updateAddressResponse["customerAddressCreate"]["customerAddress"]["address1"],
-                    // address2: updateAddressResponse["customerAddressCreate"]["customerAddress"]["address2"],
-                    // city: updateAddressResponse["customerAddressCreate"]["customerAddress"]["city"],
-                    // company: updateAddressResponse["customerAddressCreate"]["customerAddress"]["company"],
-                    // country: updateAddressResponse["customerAddressCreate"]["customerAddress"]["country"],
-                    // phone: updateAddressResponse["customerAddressCreate"]["customerAddress"]["phone"],
-                    // province: updateAddressResponse["customerAddressCreate"]["customerAddress"]["province"],
-                    // zip: updateAddressResponse["customerAddressCreate"]["customerAddress"]["zip"],
+                    id: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["id"],
+                    firstname: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["firstName"],
+                    lastname: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["lastName"],
+                    address1: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["address1"],
+                    address2: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["address2"],
+                    city: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["city"],
+                    company: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["company"],
+                    country: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["country"],
+                    phone: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["phone"],
+                    province: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["province"],
+                    zip: updateAddressResponse["customerAddressUpdate"]["customerAddress"]["zip"],
                 }
             } /*else if (req.isMagento) {
                 final_data = {
@@ -220,6 +225,75 @@ export class CustomerController extends BaseAPIController {
                 throw "only magento and shopify platform supported";
             }
             this.handleSuccessResponse(res, next, final_data)
+        } catch (err) {
+            this.handleErrorResponse(res, err)
+        }
+    }
+
+    /* Controller for set customer default address  */
+    setDefaultAddress = async (req, res, next) => {
+        try {
+            let final_data = {};
+            let manage_data = await CustomerProvider.setDetailsForSetDefaultAddress(req.body, req.params, req.headers, req.url_path, req.method, req.store);
+            let setDefaultAddressResponse = await request.requestToServer(manage_data);
+            if (req.isShopify) {
+                if (setDefaultAddressResponse["customerDefaultAddressUpdate"]["userErrors"].length) {
+                    throw setDefaultAddressResponse["customerDefaultAddressUpdate"]["userErrors"][0]["message"];
+                }
+                final_data = {
+                    id: setDefaultAddressResponse["customerDefaultAddressUpdate"]["customer"]["id"],
+                    firstname: setDefaultAddressResponse["customerDefaultAddressUpdate"]["customer"]["firstName"],
+                    lastname: setDefaultAddressResponse["customerDefaultAddressUpdate"]["customer"]["lastName"],
+                    email: setDefaultAddressResponse["customerDefaultAddressUpdate"]["customer"]["email"],
+                    defaultAddress: setDefaultAddressResponse["customerDefaultAddressUpdate"]["customer"]["defaultAddress"]
+                }
+            } /*else if (req.isMagento) {
+                final_data = {
+                    id: updateResponse.id,
+                    firstname: updateResponse.firstname,
+                    lastname: updateResponse.lastname,
+                    email: updateResponse.email,
+                    addresses: updateResponse.addresses
+                }
+            }*/ else {
+                throw "only magento and shopify platform supported";
+            }
+            this.handleSuccessResponse(res, next, final_data)
+        } catch (err) {
+            this.handleErrorResponse(res, err)
+        }
+    }
+
+    /* Controller for delete customer address  */
+    deleteAddress = async (req, res, next) => {
+        try {
+            let final_data = {};
+            let manage_data = await CustomerProvider.setDetailsForDeleteAddress(req.body, req.params, req.headers, req.url_path, req.method, req.store);
+            let deleteAddressResponse = await request.requestToServer(manage_data);
+
+            // if (req.isShopify) {
+            //     if (deleteAddressResponse["customerDefaultAddressUpdate"]["userErrors"].length) {
+            //         throw deleteAddressResponse["customerDefaultAddressUpdate"]["userErrors"][0]["message"];
+            //     }
+            //     final_data = {
+            //         id: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["id"],
+            //         firstname: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["firstName"],
+            //         lastname: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["lastName"],
+            //         email: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["email"],
+            //         defaultAddress: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["defaultAddress"]
+            //     }
+            // } /*else if (req.isMagento) {
+            //     final_data = {
+            //         id: updateResponse.id,
+            //         firstname: updateResponse.firstname,
+            //         lastname: updateResponse.lastname,
+            //         email: updateResponse.email,
+            //         addresses: updateResponse.addresses
+            //     }
+            // }*/ else {
+            //     throw "only magento and shopify platform supported";
+            // }
+            this.handleSuccessResponse(res, next, deleteAddressResponse)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }

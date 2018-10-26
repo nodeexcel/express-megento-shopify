@@ -164,11 +164,36 @@ let setDetailsToGetDataByAccessToken = async (token, headers, url_path, method, 
                                     email
                                     firstName
                                     lastName
-                                    defaultAddress{
-                                        formatted(withCompany: true
-                                            withName: true)
+                                    addresses(first: 100) {
+                                      edges {
+                                        node {
+                                            id
+                                            address1
+                                            address2
+                                            city
+                                            company
+                                            country
+                                            firstName
+                                            lastName
+                                            phone
+                                            province
+                                            zip
+                                          }
+                                      }
                                     }
-
+                                    defaultAddress{
+                                        id
+                                        address1
+                                        address2
+                                        city
+                                        company
+                                        country
+                                        firstName
+                                        lastName
+                                        phone
+                                        province
+                                        zip
+                                    }
                                 }
                             }`;
         manage_data.endUrl = url_path;
@@ -194,16 +219,16 @@ let setDetailsForAddAddress = async (body, params, headers, url_path, method, st
     if (store == 'shopify') {
         manage_data.body = `mutation {
             customerAddressCreate(customerAccessToken: "${headers.token}", address: {
-            ${body.customer.address1 ? `address1: "${body.customer.address1}",` : `` }
-            ${body.customer.address2 ? `address2: "${body.customer.address2}",` : `` }
-            ${body.customer.city ? `city: "${body.customer.city}",` : `` }
-            ${body.customer.company ? `company: "${body.customer.company}",` : `` }
-            ${body.customer.country ? `country: "${body.customer.country}",` : `` }
-            ${body.customer.firstname ? `firstName: "${body.customer.firstname}",` : `` }
-            ${body.customer.lastname ? `lastName: "${body.customer.lastname}",` : `` }
-            ${body.customer.phone ? `phone: "${body.customer.phone}",` : `` }
-            ${body.customer.province ? `province: "${body.customer.province}",` : `` }
-            ${body.customer.zip ? `zip: "${body.customer.zip}",` : `` }
+            ${body.address1 ? `address1: "${body.address1}",` : `` }
+            ${body.address2 ? `address2: "${body.address2}",` : `` }
+            ${body.city ? `city: "${body.city}",` : `` }
+            ${body.company ? `company: "${body.company}",` : `` }
+            ${body.country ? `country: "${body.country}",` : `` }
+            ${body.firstName ? `firstName: "${body.firstName}",` : `` }
+            ${body.lastName ? `lastName: "${body.lastName}",` : `` }
+            ${body.phone ? `phone: "${body.phone}",` : `` }
+            ${body.province ? `province: "${body.province}",` : `` }
+            ${body.zip ? `zip: "${body.zip}",` : `` }
           }) {
               userErrors {
                 field
@@ -253,18 +278,21 @@ let setDetailsForAddAddress = async (body, params, headers, url_path, method, st
 let setDetailsForUpdateAddress = async (body, params, headers, url_path, method, store) => {
     let manage_data = {};
     if (store == 'shopify') {
+        if(!body.addressId){
+            throw "addressId not found!";
+        }
         manage_data.body = `mutation {
-            customerAddressCreate(customerAccessToken: "${headers.token}", address: {
-            ${body.customer.address1 ? `address1: "${body.customer.address1}",` : `` }
-            ${body.customer.address2 ? `address2: "${body.customer.address2}",` : `` }
-            ${body.customer.city ? `city: "${body.customer.city}",` : `` }
-            ${body.customer.company ? `company: "${body.customer.company}",` : `` }
-            ${body.customer.country ? `country: "${body.customer.country}",` : `` }
-            ${body.customer.firstname ? `firstName: "${body.customer.firstname}",` : `` }
-            ${body.customer.lastname ? `lastName: "${body.customer.lastname}",` : `` }
-            ${body.customer.phone ? `phone: "${body.customer.phone}",` : `` }
-            ${body.customer.province ? `province: "${body.customer.province}",` : `` }
-            ${body.customer.zip ? `zip: "${body.customer.zip}",` : `` }
+            customerAddressUpdate(customerAccessToken: "${headers.token}", id:"${body.addressId}" ,  address: {
+            ${body.address1 ? `address1: "${body.address1}",` : `` }
+            ${body.address2 ? `address2: "${body.address2}",` : `` }
+            ${body.city ? `city: "${body.city}",` : `` }
+            ${body.company ? `company: "${body.company}",` : `` }
+            ${body.country ? `country: "${body.country}",` : `` }
+            ${body.firstName ? `firstName: "${body.firstName}",` : `` }
+            ${body.lastName ? `lastName: "${body.lastName}",` : `` }
+            ${body.phone ? `phone: "${body.phone}",` : `` }
+            ${body.province ? `province: "${body.province}",` : `` }
+            ${body.zip ? `zip: "${body.zip}",` : `` }
           }) {
               userErrors {
                 field
@@ -295,16 +323,93 @@ let setDetailsForUpdateAddress = async (body, params, headers, url_path, method,
             }
           }`;
         manage_data.endUrl = url_path;
-        manage_data.method = "POST";
+        manage_data.method = method;
         manage_data.contentType = "application/graphql";
         manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
 
-    } else if (store == 'magento') {
-        manage_data.endUrl = url_path + "/V1/customers/me";
-        manage_data.authorization = "Bearer " + token;
-        manage_data.method = "GET";
+    // } else if (store == 'magento') {
+        // manage_data.endUrl = url_path + "/V1/customers/me";
+        // manage_data.authorization = "Bearer " + token;
+        // manage_data.method = "GET";
+        // return manage_data;
+
+    } else {
+        throw "only magento and shopify platform supported";
+    }
+};
+
+
+let setDetailsForSetDefaultAddress = async (body, params, headers, url_path, method, store) => {
+    let manage_data = {};
+    if (store == 'shopify') {
+        if(!body.addressId){
+            throw "addressId not found!";
+        }
+        manage_data.body = `mutation {
+            customerDefaultAddressUpdate(customerAccessToken: "${headers.token}", addressId: "${body.addressId}") {
+              userErrors {
+                field
+                message
+              }
+              customer {
+                id
+                email
+                firstName
+                lastName
+                defaultAddress{
+                    id
+                    formatted(withCompany: true
+                        withName: true)
+                    }
+                }
+            }
+          }`;
+        manage_data.endUrl = url_path;
+        manage_data.method = method;
+        manage_data.contentType = "application/graphql";
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
+
+    // } else if (store == 'magento') {
+        // manage_data.endUrl = url_path + "/V1/customers/me";
+        // manage_data.authorization = "Bearer " + token;
+        // manage_data.method = "GET";
+        // return manage_data;
+
+    } else {
+        throw "only magento and shopify platform supported";
+    }
+};
+
+
+let setDetailsForDeleteAddress = async (body, params, headers, url_path, method, store) => {
+    let manage_data = {};
+    if (store == 'shopify') {
+        if(!body.addressId){
+            throw "addressId not found!";
+        }
+        manage_data.body = `mutation {
+            customerAddressDelete(id: "${body.addressId}", customerAccessToken: "${headers.token}") {
+              userErrors {
+                field
+                message
+              }
+              deletedCustomerAddressId
+            }
+          }
+          `;
+        manage_data.endUrl = url_path;
+        manage_data.method = method;
+        manage_data.contentType = "application/graphql";
+        manage_data.storefrontAccessToken = headers.storefrontAccessToken;
+        return manage_data;
+
+    // } else if (store == 'magento') {
+        // manage_data.endUrl = url_path + "/V1/customers/me";
+        // manage_data.authorization = "Bearer " + token;
+        // manage_data.method = "GET";
+        // return manage_data;
 
     } else {
         throw "only magento and shopify platform supported";
@@ -319,5 +424,7 @@ export default {
     setDetailsForUpdate,
     setDetailsToGetDataByAccessToken,
     setDetailsForAddAddress,
-    setDetailsForUpdateAddress
+    setDetailsForUpdateAddress,
+    setDetailsForSetDefaultAddress,
+    setDetailsForDeleteAddress
 };
