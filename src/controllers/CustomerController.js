@@ -271,29 +271,25 @@ export class CustomerController extends BaseAPIController {
             let manage_data = await CustomerProvider.setDetailsForDeleteAddress(req.body, req.params, req.headers, req.url_path, req.method, req.store);
             let deleteAddressResponse = await request.requestToServer(manage_data);
 
-            // if (req.isShopify) {
-            //     if (deleteAddressResponse["customerDefaultAddressUpdate"]["userErrors"].length) {
-            //         throw deleteAddressResponse["customerDefaultAddressUpdate"]["userErrors"][0]["message"];
-            //     }
-            //     final_data = {
-            //         id: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["id"],
-            //         firstname: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["firstName"],
-            //         lastname: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["lastName"],
-            //         email: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["email"],
-            //         defaultAddress: deleteAddressResponse["customerDefaultAddressUpdate"]["customer"]["defaultAddress"]
-            //     }
-            // } /*else if (req.isMagento) {
-            //     final_data = {
-            //         id: updateResponse.id,
-            //         firstname: updateResponse.firstname,
-            //         lastname: updateResponse.lastname,
-            //         email: updateResponse.email,
-            //         addresses: updateResponse.addresses
-            //     }
-            // }*/ else {
-            //     throw "only magento and shopify platform supported";
-            // }
-            this.handleSuccessResponse(res, next, deleteAddressResponse)
+            if (req.isShopify) {
+                if (deleteAddressResponse["customerAddressDelete"]["userErrors"].length) {
+                    throw deleteAddressResponse["customerAddressDelete"]["userErrors"][0]["message"];
+                }
+                final_data = {
+                    deletedCustomerAddressId: deleteAddressResponse["customerAddressDelete"]["deletedCustomerAddressId"]
+                }
+            } /*else if (req.isMagento) {
+                final_data = {
+                    id: updateResponse.id,
+                    firstname: updateResponse.firstname,
+                    lastname: updateResponse.lastname,
+                    email: updateResponse.email,
+                    addresses: updateResponse.addresses
+                }
+            }*/ else {
+                throw "only magento and shopify platform supported";
+            }
+            this.handleSuccessResponse(res, next, final_data)
         } catch (err) {
             this.handleErrorResponse(res, err)
         }
