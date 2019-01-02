@@ -8,7 +8,8 @@ export class WebController extends BaseAPIController {
         try {
             let manage_data = await WebProvider.setPathForConfigPage(req.method, req.url_path, req.store);
             let web_config = await request.requestToServer(manage_data);
-            this.handleSuccessResponse(res, next, web_config)
+            // this.handleSuccessResponse(res, next, web_config)
+            console.log(web_config);
         } catch (err) {
             this.handleErrorResponse(res, err)
         }

@@ -161,7 +161,7 @@ export class CustomerController extends BaseAPIController {
                     throw addAddressResponse["customerAddressCreate"]["userErrors"][0]["message"];
                 }
                 final_data = {
-                    id: addAddressResponse["customerAddressCreate"]["customerAddress"]["id"],
+                    addressId: addAddressResponse["customerAddressCreate"]["customerAddress"]["id"],
                     firstname: addAddressResponse["customerAddressCreate"]["customerAddress"]["firstName"],
                     lastname: addAddressResponse["customerAddressCreate"]["customerAddress"]["lastName"],
                     address1: addAddressResponse["customerAddressCreate"]["customerAddress"]["address1"],
@@ -173,15 +173,25 @@ export class CustomerController extends BaseAPIController {
                     province: addAddressResponse["customerAddressCreate"]["customerAddress"]["province"],
                     zip: addAddressResponse["customerAddressCreate"]["customerAddress"]["zip"],
                 }
-            } /*else if (req.isMagento) {
+            } else if (req.isMagento) {
                 final_data = {
-                    id: updateResponse.id,
-                    firstname: updateResponse.firstname,
-                    lastname: updateResponse.lastname,
-                    email: updateResponse.email,
-                    addresses: updateResponse.addresses
+                    addressId: addAddressResponse["addresses"][0]["id"],
+                    customerId: addAddressResponse["addresses"][0]["customer_id"],
+                    firstname: addAddressResponse["addresses"][0]["firstname"],
+                    lastname: addAddressResponse["addresses"][0]["lastname"],
+                    address1: addAddressResponse["addresses"][0]["street"][0],
+                    address2: addAddressResponse["addresses"][0]["street"][1],
+                    city: addAddressResponse["addresses"][0]["city"],
+                    company: addAddressResponse["addresses"][0]["company"],
+                    country: addAddressResponse["addresses"][0]["country"],
+                    countryId: addAddressResponse["addresses"][0]["country_id"],
+                    phone: addAddressResponse["addresses"][0]["telephone"],
+                    province: addAddressResponse["addresses"][0]["region"]["region"],
+                    provinceCode: addAddressResponse["addresses"][0]["region"]["region_code"],
+                    provinceId: addAddressResponse["addresses"][0]["region"]["region_id"],
+                    zip: addAddressResponse["addresses"][0]["postcode"],
                 }
-            }*/ else {
+            } else {
                 throw "only magento and shopify platform supported";
             }
             this.handleSuccessResponse(res, next, final_data)

@@ -101,7 +101,7 @@ let setDetailsForForgotPassword = async (body, params, headers, url_path, method
             "email": body.email,
             "template": "template",
             "websiteId": 0
-          };
+        };
         manage_data.method = "PUT";
         manage_data.app_id = headers.app_id;
         manage_data.authorization = headers.authorization;
@@ -265,9 +265,41 @@ let setDetailsForAddAddress = async (body, params, headers, url_path, method, st
         return manage_data;
 
     } else if (store == 'magento') {
-        manage_data.endUrl = url_path + "/V1/customers/me";
-        manage_data.authorization = "Bearer " + token;
-        manage_data.method = "GET";
+
+        manage_data.body = {
+            "customer": {
+                "id": params.id,
+                "email": body.defaultEmail,
+                "firstname": body.defaultFirstName,
+                "lastname": body.defaultLastName,
+                "website_id": 1,
+                "addresses": [{
+                    "firstname": body.firstName,
+                    "lastname": body.lastName,
+                    "company": body.company,
+                    "street": [
+                        body.address1 ? body.address1 : null,
+                        body.address2 ? body.address2 : null
+                    ],
+                    "city": body.city,
+                    "region": body.country,
+                    "postcode": body.zip,
+                    "telephone": body.phone,
+                    "countryId": body.country,
+                    "region": {
+                      "regionCode": body.regionCode,
+                      "region": body.province,
+                      "regionId": body.provinceId
+                    }
+                }]
+            }
+        };
+        manage_data.endUrl = url_path + "/V1/customers/" + params.id;
+        manage_data.method = "PUT";
+        manage_data.app_id = headers.app_id;
+        manage_data.authorization = headers.authorization;
+        manage_data.contentType = headers['content-type'];
+        console.log(manage_data)
         return manage_data;
 
     } else {
@@ -278,7 +310,7 @@ let setDetailsForAddAddress = async (body, params, headers, url_path, method, st
 let setDetailsForUpdateAddress = async (body, params, headers, url_path, method, store) => {
     let manage_data = {};
     if (store == 'shopify') {
-        if(!body.addressId){
+        if (!body.addressId) {
             throw "addressId not found!";
         }
         manage_data.body = `mutation {
@@ -328,7 +360,7 @@ let setDetailsForUpdateAddress = async (body, params, headers, url_path, method,
         manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
 
-    // } else if (store == 'magento') {
+        // } else if (store == 'magento') {
         // manage_data.endUrl = url_path + "/V1/customers/me";
         // manage_data.authorization = "Bearer " + token;
         // manage_data.method = "GET";
@@ -343,7 +375,7 @@ let setDetailsForUpdateAddress = async (body, params, headers, url_path, method,
 let setDetailsForSetDefaultAddress = async (body, params, headers, url_path, method, store) => {
     let manage_data = {};
     if (store == 'shopify') {
-        if(!body.addressId){
+        if (!body.addressId) {
             throw "addressId not found!";
         }
         manage_data.body = `mutation {
@@ -371,7 +403,7 @@ let setDetailsForSetDefaultAddress = async (body, params, headers, url_path, met
         manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
 
-    // } else if (store == 'magento') {
+        // } else if (store == 'magento') {
         // manage_data.endUrl = url_path + "/V1/customers/me";
         // manage_data.authorization = "Bearer " + token;
         // manage_data.method = "GET";
@@ -386,7 +418,7 @@ let setDetailsForSetDefaultAddress = async (body, params, headers, url_path, met
 let setDetailsForDeleteAddress = async (body, params, headers, url_path, method, store) => {
     let manage_data = {};
     if (store == 'shopify') {
-        if(!body.addressId){
+        if (!body.addressId) {
             throw "addressId not found!";
         }
         manage_data.body = `mutation {
@@ -405,7 +437,7 @@ let setDetailsForDeleteAddress = async (body, params, headers, url_path, method,
         manage_data.storefrontAccessToken = headers.storefrontAccessToken;
         return manage_data;
 
-    // } else if (store == 'magento') {
+        // } else if (store == 'magento') {
         // manage_data.endUrl = url_path + "/V1/customers/me";
         // manage_data.authorization = "Bearer " + token;
         // manage_data.method = "GET";
